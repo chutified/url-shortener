@@ -8,22 +8,36 @@ import (
 	"github.com/chutified/url-shortener/config"
 )
 
-// InitDB intiliazes the database connection.
-// Valid credentials must be provided to connect the
-// Postgres database.
-func InitDB(dbCfg config.DB) (*sql.DB, error) {
+// Service is the controller of the data services.
+// Only DataService stores the database connection.
+type Service struct {
+	DB *sql.DB
+}
+
+// NewService is the contructor of the Service controller.
+func NewService() *Service {
+	return &Service{}
+}
+
+// InitDB intiliazes the database connection for the data server.
+// Valid credentials must be provided to connect to the database.
+func (s *Service) InitDB(dbCfg config.DB) error {
+
+	// retrieve db connection string
+	connStr := dbCfg.ConnStr()
 
 	// open connection to db
-	db, err := sql.Open("postgres", dbCfg.ConnStr())
+	var err error
+	s.DB, err = sql.Open("postgres", connStr)
 	if err != nil {
-		return nil, fmt.Errorf("failed to open db conn: %w", err)
+		return fmt.Errorf("failed to open db conn: %w", err)
 	}
 
 	// test connection
-	err = db.Ping()
+	err = s.DB.Ping()
 	if err != nil {
-		return nil, errors.New("db conn verification failed")
+		return errors.New("db conn verification failed")
 	}
 
-	return db, nil
+	return nil
 }
