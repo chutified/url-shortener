@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -11,6 +12,15 @@ import (
 // Service is the controller of the data services.
 // Only DataService stores the database connection.
 type Service interface {
+	InitDB(config.DB) error
+	StopDB() error
+	AddRecord(context.Context, *Record) (*Record, error)
+	UpdateRecord(context.Context, string, *Record) (*Record, error)
+	DeleteRecord(context.Context, string) error
+	GetRecordByID(context.Context, string) (*Record, error)
+	GetRecordByShort(context.Context, string) (*Record, error)
+	GetRecordByFull(context.Context, string) (*Record, error)
+	GetAllRecords(context.Context, int, int) ([]*Record, error)
 }
 
 // service implements Service interface.
