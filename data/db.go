@@ -10,18 +10,22 @@ import (
 
 // Service is the controller of the data services.
 // Only DataService stores the database connection.
-type Service struct {
+type Service interface {
+}
+
+// service implements Service interface.
+type service struct {
 	DB *sql.DB
 }
 
 // NewService is the contructor of the Service controller.
-func NewService() *Service {
-	return &Service{}
+func NewService() Service {
+	return &service{}
 }
 
 // InitDB intiliazes the database connection for the data server.
 // Valid credentials must be provided to connect to the database.
-func (s *Service) InitDB(dbCfg config.DB) error {
+func (s *service) InitDB(dbCfg config.DB) error {
 
 	// retrieve db connection string
 	connStr := dbCfg.ConnStr()
@@ -43,7 +47,7 @@ func (s *Service) InitDB(dbCfg config.DB) error {
 }
 
 // StopDB closes database connection of the service.
-func (s *Service) StopDB() error {
+func (s *service) StopDB() error {
 
 	// close db conection
 	err := s.DB.Close()
