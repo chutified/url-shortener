@@ -14,7 +14,7 @@ type DB struct {
 // ConnStr returns a connection string
 // for the psql database.
 func (db *DB) ConnStr() string {
-	return fmt.Sprint("host=%s port=%d user=%s "+
+	return fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		db.Host, db.Port, db.User, db.Password, db.DBName)
 }
