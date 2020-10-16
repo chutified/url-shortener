@@ -41,3 +41,15 @@ func (s *Service) InitDB(dbCfg config.DB) error {
 
 	return nil
 }
+
+// StopDB closes database connection of the service.
+func (s *Service) StopDB() error {
+
+	// close db conection
+	err := s.DB.Close()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
