@@ -54,6 +54,12 @@ func (s *service) GetRecordByFull(ctx context.Context, full string) (*Record, er
 	return nil, nil
 }
 
+func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
+	//TODO
+	fmt.Println("Served number of records.")
+	return 0, nil
+}
+
 func (s *service) GetAllRecords(ctx context.Context, p int, pagin int) ([]*Record, error) {
 	//TODO
 	fmt.Printf("Served records (page %d, with pagin %d)\n", p, pagin)
