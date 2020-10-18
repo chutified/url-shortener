@@ -51,3 +51,8 @@ func GetConfig(file string) (*Config, error) {
 
 	return &cfg, nil
 }
+
+// Addr returns a chosen address for the server.
+func (cfg *Config) Addr() string {
+	return fmt.Sprintf(":%d", cfg.SrvPort)
+}
