@@ -38,11 +38,11 @@ func NewService() Service {
 func (s *service) InitDB(dbCfg *config.DB) error {
 
 	// retrieve db connection string
-	connStr := dbCfg.ConnStr()
+	connStr, driver := dbCfg.ConnStr()
 
 	// open connection to db
 	var err error
-	s.DB, err = sql.Open("postgres", connStr)
+	s.DB, err = sql.Open(driver, connStr)
 	if err != nil {
 		return fmt.Errorf("failed to open db conn: %w", err)
 	}

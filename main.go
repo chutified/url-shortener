@@ -5,7 +5,7 @@ import (
 
 	"github.com/chutified/url-shortener/config"
 	"github.com/chutified/url-shortener/data"
-	_ "github.com/lib/pq"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {

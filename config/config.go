@@ -2,11 +2,12 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 )
 
-// Config represents the server's settings and the configuration of Postgres database.
+// Config represents the server's settings and the configuration of the database.
 type Config struct {
 	DB *DB `json:"db"`
 }
@@ -34,6 +35,17 @@ func GetConfig(file string) (*Config, error) {
 	err = json.NewDecoder(f).Decode(&cfg)
 	if err != nil {
 		return nil, fmt.Errorf("unable to decode config file: %w", err)
+	}
+
+	// validate config's driver
+	ok := false
+	for _, d := range dialects {
+		if cfg.DB.Driver == d {
+			ok = true
+		}
+	}
+	if !ok {
+		return nil, errors.New("invalid/not suported database dialect: " + cfg.DB.Driver)
 	}
 
 	return &cfg, nil
