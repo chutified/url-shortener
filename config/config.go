@@ -9,7 +9,8 @@ import (
 
 // Config represents the server's settings and the configuration of the database.
 type Config struct {
-	DB *DB `json:"db"`
+	SrvPort int `json:"server_port"`
+	DB      *DB `json:"db"`
 }
 
 // GetConfig returns configuration based on the given file.
