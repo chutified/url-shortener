@@ -12,8 +12,13 @@ type handler struct {
 	ds data.Service
 }
 
-// initHandler create a new handler with a data service.
-func (h *handler) initHandler(dbCfg *config.DB) (*handler, error) {
+// newHandler returns an empty handler.
+func newHandler() *handler {
+	return &handler{}
+}
+
+// initDataService initializes handler's data service.
+func (h *handler) initDataService(dbCfg *config.DB) error {
 
 	// create new data service
 	h.ds = data.NewService()
@@ -21,10 +26,10 @@ func (h *handler) initHandler(dbCfg *config.DB) (*handler, error) {
 	// initialize data service
 	err := h.ds.InitDB(dbCfg)
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize data service: %w", err)
+		return fmt.Errorf("failed to initialize data service: %w", err)
 	}
 
-	return h, nil
+	return nil
 }
 
 // closeHandler stops all active connections. closeHandler closes the data service.
