@@ -20,7 +20,7 @@ type Service interface {
 	GetRecordByID(context.Context, string) (*Record, error)
 	GetRecordByShort(context.Context, string) (*Record, error)
 	GetRecordByFull(context.Context, string) (*Record, error)
-	GetAllRecords(context.Context, int, int) ([]*Record, error)
+	GetAllRecords(context.Context, string, int, int) ([]*Record, error)
 }
 
 // service implements Service interface.

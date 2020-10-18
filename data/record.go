@@ -60,8 +60,8 @@ func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
 	return 0, nil
 }
 
-func (s *service) GetAllRecords(ctx context.Context, p int, pagin int) ([]*Record, error) {
+func (s *service) GetAllRecords(ctx context.Context, sort string, p int, pagin int) ([]*Record, error) {
 	//TODO
-	fmt.Printf("Served records (page %d, with pagin %d)\n", p, pagin)
+	fmt.Printf("Served records sorted by %s (page %d, with pagin %d)\n", sort, p, pagin)
 	return nil, nil
 }
