@@ -1,9 +1,53 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
+	"github.com/chutified/url-shortener/data"
+	"github.com/gin-gonic/gin"
+)
+
+// AddRecord adds a new record.
 func (h *handler) AddRecord(c *gin.Context) {
-	//TODO
+
+	// bind record
+	var newr data.Record
+	err := c.ShouldBindJSON(&newr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// add record
+	r, err := h.ds.AddRecord(c, &newr)
+	if err != nil {
+		switch err {
+
+		// invalid record (e.g. missing keys)
+		case data.ErrInvalidRecord:
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+
+		// short already in use
+		case data.ErrUnavailableShort:
+			c.JSON(http.StatusConflict, gin.H{
+				"error": err.Error(),
+			})
+
+		// server error
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+		return
+	}
+
+	// record successfully added
+	c.JSON(http.StatusOK, r)
 }
 
 func (h *handler) UpdateRecord(c *gin.Context) {
