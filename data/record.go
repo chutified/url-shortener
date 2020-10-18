@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 )
@@ -17,6 +18,12 @@ type Record struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `json:"deleted_at"`
 }
+
+// ErrInvalidRecord is returned when an invalid record is provided.
+var ErrInvalidRecord = errors.New("given record is invalid")
+
+// ErrUnavailableShort is returned when the new record has a Short which already exists.
+var ErrUnavailableShort = errors.New("short of given record is already in use")
 
 func (s *service) AddRecord(ctx context.Context, r *Record) (*Record, error) {
 	//TODO
