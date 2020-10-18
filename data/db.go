@@ -38,7 +38,7 @@ func NewService() Service {
 func (s *service) InitDB(dbCfg *config.DB) error {
 
 	// retrieve db connection string
-	connStr, driver := dbCfg.ConnStr()
+	driver, connStr := dbCfg.ConnStr()
 
 	// open connection to db
 	var err error

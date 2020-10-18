@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/chutified/url-shortener/config"
@@ -21,4 +22,6 @@ func main() {
 		log.Fatal(err)
 	}
 	defer s.StopDB()
+
+	fmt.Println("OK")
 }
