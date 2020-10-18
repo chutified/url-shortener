@@ -9,13 +9,13 @@ import (
 // Record is the unit of each shorten URL.  Record stores the time of its creation,
 // uppdate and deletion. All Short atributes must be unique. Full can have duplicates.
 type Record struct {
-	ID        string
-	Full      string
-	Short     string
-	Usage     int32
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt time.Time
+	ID        string    `json:"id"`
+	Full      string    `json:"full"`
+	Short     string    `json:"short"`
+	Usage     int32     `json:"usage"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	DeletedAt time.Time `json:"deleted_at"`
 }
 
 func (s *service) AddRecord(ctx context.Context, r *Record) (*Record, error) {
