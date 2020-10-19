@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -12,7 +13,8 @@ import (
 type Server interface {
 	Set(*config.Config) error
 	Run() error
-	Stop() error
+	Stop(time.Duration) error
+	Close() error
 }
 
 // server implements Server interface.
@@ -58,13 +60,33 @@ func (s *server) Run() error {
 	// run server
 	err := s.srv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
-		return fmt.Errorf("unexpected server error: %w")
+		return fmt.Errorf("unexpected server error: %w", err)
 	}
 
 	return nil
 }
 
-// Stop stop the server and close all open connections and services.
-func (s *server) Stop() error {
-	//TODO
+// Stop stop the server.
+func (s *server) Stop(t time.Duration) error {
+
+	// stop server
+	ctx, cancel := context.WithTimeout(context.Background(), t)
+	defer cancel()
+	if err := s.srv.Shutdown(ctx); err != nil {
+		return fmt.Errorf("forced shutdown: %w", err)
+	}
+
+	return nil
+}
+
+// Close closes all open connections and services.
+func (s *server) Close() error {
+
+	// close handler
+	err := s.h.closeHandler()
+	if err != nil {
+		return fmt.Errorf("unsuccessfully closed handler: %w", err)
+	}
+
+	return nil
 }
