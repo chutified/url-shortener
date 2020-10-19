@@ -13,14 +13,15 @@ import (
 type Server interface {
 	Set(*config.Config) error
 	Run() error
-	Stop(time.Duration) error
+	Stop() error
 	Close() error
 }
 
 // server implements Server interface.
 type server struct {
-	h   *handler
-	srv *http.Server
+	h          *handler
+	srv        *http.Server
+	srvTimeOut time.Duration
 }
 
 // NewServer is a constructor of the server.
@@ -31,6 +32,9 @@ func NewServer() Server {
 // Set prepares server to run. Set creates under the hood a new database connection
 // and server structure based on the given configuration + manage routings and endpoints.
 func (s *server) Set(cfg *config.Config) error {
+
+	// set timeout
+	s.srvTimeOut, _ = time.ParseDuration(cfg.SrvTimeOut)
 
 	// initialize handler
 	s.h = newHandler()
@@ -67,10 +71,10 @@ func (s *server) Run() error {
 }
 
 // Stop stop the server.
-func (s *server) Stop(t time.Duration) error {
+func (s *server) Stop() error {
 
 	// stop server
-	ctx, cancel := context.WithTimeout(context.Background(), t)
+	ctx, cancel := context.WithTimeout(context.Background(), s.srvTimeOut)
 	defer cancel()
 	if err := s.srv.Shutdown(ctx); err != nil {
 		return fmt.Errorf("forced shutdown: %w", err)
