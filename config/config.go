@@ -5,12 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 )
 
 // Config represents the server's settings and the configuration of the database.
 type Config struct {
-	SrvPort int `json:"server_port"`
-	DB      *DB `json:"db"`
+	SrvPort    int    `json:"server_port"`
+	SrvTimeOut string `json:"server_timeout"`
+	DB         *DB    `json:"db"`
 }
 
 // GetConfig returns configuration based on the given file.
@@ -47,6 +49,12 @@ func GetConfig(file string) (*Config, error) {
 	}
 	if !ok {
 		return nil, errors.New("invalid/not suported database dialect: " + cfg.DB.Driver)
+	}
+
+	// validate server timeout
+	_, err = time.ParseDuration(cfg.SrvTimeOut)
+	if err != nil {
+		return nil, errors.New("invalid server timeout duration: " + cfg.SrvTimeOut)
 	}
 
 	return &cfg, nil
