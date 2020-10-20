@@ -58,12 +58,13 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 	//TODO
 }
 
-// func (h *handler) DeleteRecord(c *gin.Context) {
+// DeleteRecord removes the record with the certain ID.
+func (h *handler) DeleteRecord(c *gin.Context) {
 
-//     // get record's ID
-//     id := c.Param("record_id")
-//     //TODO
-// }
+	// get record's ID
+	// id := c.Param("record_id")
+	//TODO
+}
 
 // func (h *handler) GetRecordById(c *gin.Context) {
 
