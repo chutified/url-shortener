@@ -74,12 +74,13 @@ func (h *handler) GetRecordById(c *gin.Context) {
 	//TODO
 }
 
-// func (h *handler) GetRecordByShort(c *gin.Context) {
+// GetRecordByShort serves a record with the certain Short value.
+func (h *handler) GetRecordByShort(c *gin.Context) {
 
-//     // get record's Short
-//     short := c.Param("record_short")
-//     //TODO
-// }
+	// get record's Short
+	// short := c.Param("record_short")
+	//TODO
+}
 
 // func (h *handler) GetRecordByFull(c *gin.Context) {
 
