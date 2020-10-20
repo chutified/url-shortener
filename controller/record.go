@@ -82,16 +82,18 @@ func (h *handler) GetRecordByShort(c *gin.Context) {
 	//TODO
 }
 
-// func (h *handler) GetRecordByFull(c *gin.Context) {
+// GetRecordByFull serves a record with the sertain Full value.
+func (h *handler) GetRecordByFull(c *gin.Context) {
 
-//     // get record's Full
-//     full := c.Param("record_full")
-//     //TODO
-// }
+	// get record's Full
+	// full := c.Param("record_full")
+	//TODO
+}
 
-// func (h *handler) GetRecordsLen(c *gin.Context) {
-//     // TODO
-// }
+// GetRecordsLen returns a total number of records.
+func (h *handler) GetRecordsLen(c *gin.Context) {
+	// TODO
+}
 
 // func (h *handler) GetAllRecords(c *gin.Context) {
 
