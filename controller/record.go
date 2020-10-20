@@ -50,12 +50,13 @@ func (h *handler) AddRecord(c *gin.Context) {
 	c.JSON(http.StatusOK, r)
 }
 
-// func (h *handler) UpdateRecord(c *gin.Context) {
+// UpdateRecord replace the record with given the certain ID.
+func (h *handler) UpdateRecord(c *gin.Context) {
 
-//     // get record's ID
-//     id := c.Param("record_id")
-//     //TODO
-// }
+	// get record's ID
+	// id := c.Param("record_id")
+	//TODO
+}
 
 // func (h *handler) DeleteRecord(c *gin.Context) {
 
