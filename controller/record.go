@@ -95,10 +95,11 @@ func (h *handler) GetRecordsLen(c *gin.Context) {
 	// TODO
 }
 
-// func (h *handler) GetAllRecords(c *gin.Context) {
+// GetAllRecords returns xth page with a certain number of records.
+func (h *handler) GetAllRecords(c *gin.Context) {
 
-//     // get pagination data
-//     p := c.DefaultQuery("page", "1")
-//     pagin := c.DefaultQuery("pagin", "30")
-//     //TODO
-// }
+	// get pagination data
+	// p := c.DefaultQuery("page", "1")
+	// pagin := c.DefaultQuery("pagin", "30")
+	//TODO
+}
