@@ -12,6 +12,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// TODO
+// enable recovery (with auth)
+// enable downloadstatistics (with auth)
+// frontend?
+
 func main() {
 
 	// get configuration
