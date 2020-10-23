@@ -231,7 +231,38 @@ func (h *handler) GetRecordsLen(c *gin.Context) {
 func (h *handler) GetAllRecords(c *gin.Context) {
 
 	// get pagination data
-	// p := c.DefaultQuery("page", "1")
-	// pagin := c.DefaultQuery("pagin", "30")
-	//TODO
+	pageStr := c.DefaultQuery("page", "1")
+	paginStr := c.DefaultQuery("pagin", "30")
+	sort := c.DefaultQuery("sort", "id")
+
+	// convert page and pagin
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		page = 1
+	}
+	pagin, err := strconv.Atoi(paginStr)
+	if err != nil {
+		pagin = 30
+	}
+
+	// declare PageCfg
+	pcfg := data.PageCfg{
+		Page:  page,
+		Pagin: pagin,
+		Sort:  sort,
+	}
+
+	// get records
+	rs, pgcfgG, err := h.ds.GetAllRecords(c, pcfg)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	// records successfully retrieved
+	c.JSON(http.StatusOK, gin.H{
+		"page_config": pgcfgG,
+		"result":      rs,
+	})
 }
