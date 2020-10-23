@@ -20,6 +20,7 @@ type Service interface {
 	GetRecordByID(context.Context, string) (*Record, error)
 	GetRecordByShort(context.Context, string) (*Record, error)
 	GetRecordByFull(context.Context, string) (*Record, error)
+	GetRecordsLen(ctx context.Context) (int, error)
 	GetAllRecords(context.Context, string, int, int) ([]*Record, error)
 }
 
