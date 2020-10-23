@@ -212,7 +212,19 @@ func (h *handler) GetRecordByFull(c *gin.Context) {
 
 // GetRecordsLen returns a total number of records.
 func (h *handler) GetRecordsLen(c *gin.Context) {
-	// TODO
+
+	// get length
+	l, err := h.ds.GetRecordsLen(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+	}
+
+	// records length successfully retrieved
+	c.JSON(http.StatusOK, gin.H{
+		"len": l,
+	})
 }
 
 // GetAllRecords returns xth page with a certain number of records.
