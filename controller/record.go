@@ -130,8 +130,28 @@ func (h *handler) DeleteRecord(c *gin.Context) {
 func (h *handler) GetRecordByID(c *gin.Context) {
 
 	// get record's ID
-	// id := c.Param("record_id")
-	//TODO
+	id := c.Param("record_id")
+
+	// get record
+	r, err := h.ds.GetRecordByID(c, id)
+	if err != nil {
+		switch err {
+
+		case data.ErrInvalidID:
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+		return
+	}
+
+	// record successfully retrieved
+	c.JSON(http.StatusOK, r)
 }
 
 // GetRecordByShort serves a record with the certain Short value.
