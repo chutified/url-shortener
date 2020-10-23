@@ -26,6 +26,8 @@ var (
 	ErrIDNotFound = errors.New("given 'id' does not exist")
 	// ErrShortNotFound is returned when record's Short can not be found.
 	ErrShortNotFound = errors.New("given 'short' does not exist")
+	// ErrFullNotFound is returned when record's Full can not be found.
+	ErrFullNotFound = errors.New("given 'full' does not exist")
 	// ErrUnavailableShort is returned when the new record has a Short which already exists.
 	ErrUnavailableShort = errors.New("short of given record is already in use")
 )
