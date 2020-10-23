@@ -186,8 +186,28 @@ func (h *handler) GetRecordByShort(c *gin.Context) {
 func (h *handler) GetRecordByFull(c *gin.Context) {
 
 	// get record's Full
-	// full := c.Param("record_full")
-	//TODO
+	full := c.Param("record_full")
+
+	// get record
+	r, err := h.ds.GetRecordByFull(c, full)
+	if err != nil {
+		switch err {
+
+		case data.ErrFullNotFound:
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+		return
+	}
+
+	// record successfully retrieved
+	c.JSON(http.StatusOK, r)
 }
 
 // GetRecordsLen returns a total number of records.
