@@ -26,6 +26,20 @@ type PageCfg struct {
 	Sort  string
 }
 
+func (p *PageCfg) checkSort() {
+
+	// check if Sort attribute is valid
+	sortable := []string{"id", "full", "short", "usage", "created_at", "updated_at"}
+	for _, s := range sortable {
+		if p.Sort == s {
+			return
+		}
+	}
+
+	// set default Sort value
+	p.Sort = "id"
+}
+
 var (
 	// ErrInvalidRecord is returned when an invalid record is provided.
 	ErrInvalidRecord = errors.New("given record is invalid")
