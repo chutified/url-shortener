@@ -21,7 +21,7 @@ type Service interface {
 	GetRecordByShort(context.Context, string) (*Record, error)
 	GetRecordByFull(context.Context, string) (*Record, error)
 	GetRecordsLen(ctx context.Context) (int, error)
-	GetAllRecords(context.Context, string, int, int) ([]*Record, error)
+	GetAllRecords(context.Context, *PageCfg) ([]*Record, *PageCfg, error)
 }
 
 // service implements Service interface.
