@@ -158,8 +158,28 @@ func (h *handler) GetRecordByID(c *gin.Context) {
 func (h *handler) GetRecordByShort(c *gin.Context) {
 
 	// get record's Short
-	// short := c.Param("record_short")
-	//TODO
+	short := c.Param("record_short")
+
+	// get record
+	r, err := h.ds.GetRecordByShort(c, short)
+	if err != nil {
+		switch err {
+
+		case data.ErrShortNotFound:
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+		return
+	}
+
+	// record successfully retrieved
+	c.JSON(http.StatusOK, r)
 }
 
 // GetRecordByFull serves a record with the sertain Full value.
