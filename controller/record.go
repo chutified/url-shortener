@@ -54,8 +54,51 @@ func (h *handler) AddRecord(c *gin.Context) {
 func (h *handler) UpdateRecord(c *gin.Context) {
 
 	// get record's ID
-	// id := c.Param("record_id")
-	//TODO
+	id := c.Param("record_id")
+
+	// bind record
+	var newr data.Record
+	err := c.ShouldBindJSON(&newr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// update record
+	r, err := h.ds.UpdateRecord(c, id, &newr)
+	if err != nil {
+		switch err {
+
+		// invalid record (e.g. missing keys)
+		case data.ErrInvalidRecord:
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+
+		// short already in use
+		case data.ErrUnavailableShort:
+			c.JSON(http.StatusConflict, gin.H{
+				"error": err.Error(),
+			})
+
+		case data.ErrInvalidID:
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+
+		// server error
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+		return
+	}
+
+	// record successfully updated
+	c.JSON(http.StatusOK, r)
 }
 
 // DeleteRecord removes the record with the certain ID.
