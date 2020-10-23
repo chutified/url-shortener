@@ -105,8 +105,29 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 func (h *handler) DeleteRecord(c *gin.Context) {
 
 	// get record's ID
-	// id := c.Param("record_id")
-	//TODO
+	id := c.Param("record_id")
+
+	// delete record
+	did, err := h.ds.DeleteRecord(c, id)
+	if err != nil {
+		switch err {
+		case data.ErrInvalidID:
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+		return
+	}
+
+	// record successfully deleted
+	c.JSON(http.StatusOK, gin.H{
+		"id": did,
+	})
 }
 
 // GetRecordByID serves a record with the certain ID.
