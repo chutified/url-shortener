@@ -25,19 +25,16 @@ func (h *handler) AddRecord(c *gin.Context) {
 	if err != nil {
 		switch err {
 
-		// invalid record (e.g. missing keys)
 		case data.ErrInvalidRecord:
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 
-		// short already in use
 		case data.ErrUnavailableShort:
 			c.JSON(http.StatusConflict, gin.H{
 				"error": err.Error(),
 			})
 
-		// server error
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
@@ -71,13 +68,11 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 	if err != nil {
 		switch err {
 
-		// invalid record (e.g. missing keys)
 		case data.ErrInvalidRecord:
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 
-		// short already in use
 		case data.ErrUnavailableShort:
 			c.JSON(http.StatusConflict, gin.H{
 				"error": err.Error(),
@@ -111,6 +106,7 @@ func (h *handler) DeleteRecord(c *gin.Context) {
 	did, err := h.ds.DeleteRecord(c, id)
 	if err != nil {
 		switch err {
+
 		case data.ErrInvalidID:
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
