@@ -78,7 +78,7 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 				"error": err.Error(),
 			})
 
-		case data.ErrInvalidID:
+		case data.ErrIDNotFound:
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
@@ -107,7 +107,7 @@ func (h *handler) DeleteRecord(c *gin.Context) {
 	if err != nil {
 		switch err {
 
-		case data.ErrInvalidID:
+		case data.ErrIDNotFound:
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
@@ -137,7 +137,7 @@ func (h *handler) GetRecordByID(c *gin.Context) {
 	if err != nil {
 		switch err {
 
-		case data.ErrInvalidID:
+		case data.ErrIDNotFound:
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
