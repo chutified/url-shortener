@@ -19,6 +19,13 @@ type Record struct {
 	DeletedAt time.Time `json:"deleted_at"`
 }
 
+// PageCfg holds a configuration for retrieving large number of records.
+type PageCfg struct {
+	Page  int
+	Pagin int
+	Sort  string
+}
+
 var (
 	// ErrInvalidRecord is returned when an invalid record is provided.
 	ErrInvalidRecord = errors.New("given record is invalid")
