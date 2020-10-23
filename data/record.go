@@ -40,10 +40,10 @@ func (s *service) UpdateRecord(ctx context.Context, id string, r *Record) (*Reco
 	return nil, nil
 }
 
-func (s *service) DeleteRecord(ctx context.Context, id string) error {
+func (s *service) DeleteRecord(ctx context.Context, id string) (int, error) {
 	//TODO
 	fmt.Printf("Deleted record id (%s)\n", id)
-	return nil
+	return 0, nil
 }
 
 func (s *service) GetRecordByID(ctx context.Context, id string) (*Record, error) {

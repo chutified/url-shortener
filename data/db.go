@@ -16,7 +16,7 @@ type Service interface {
 	StopDB() error
 	AddRecord(context.Context, *Record) (*Record, error)
 	UpdateRecord(context.Context, string, *Record) (*Record, error)
-	DeleteRecord(context.Context, string) error
+	DeleteRecord(context.Context, string) (int, error)
 	GetRecordByID(context.Context, string) (*Record, error)
 	GetRecordByShort(context.Context, string) (*Record, error)
 	GetRecordByFull(context.Context, string) (*Record, error)
