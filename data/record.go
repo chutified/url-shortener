@@ -21,9 +21,9 @@ type Record struct {
 
 // PageCfg holds a configuration for retrieving large number of records.
 type PageCfg struct {
-	Page  int
-	Pagin int
-	Sort  string
+	Page  int    `json:"page"`
+	Pagin int    `json:"pagin"`
+	Sort  string `json:"sort"`
 }
 
 func (p *PageCfg) checkSort() {
