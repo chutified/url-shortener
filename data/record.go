@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"time"
@@ -10,13 +11,13 @@ import (
 // Record is the unit of each shorten URL.  Record stores the time of its creation,
 // update and deletion. All Short atributes must be unique. Full can have duplicates.
 type Record struct {
-	ID        string    `json:"id"`
-	Full      string    `json:"full"`
-	Short     string    `json:"short"`
-	Usage     int32     `json:"usage"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	DeletedAt time.Time `json:"deleted_at"`
+	ID        string       `json:"id"`
+	Full      string       `json:"full"`
+	Short     string       `json:"short"`
+	Usage     int32        `json:"usage"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at"`
+	DeletedAt sql.NullTime `json:"deleted_at"`
 }
 
 // PageCfg holds a configuration for retrieving large number of records.
