@@ -2,11 +2,11 @@
     "server_port": 8080,
     "server_timeout": "10s",
     "db": {
-        "driver": "mysql",
+        "driver": "postgres",
         "host": "127.0.0.1",
-        "port": 3306,
-        "user": "root",
-        "password": "root",
-        "dbname": "classicmodels"
+        "port": 5432,
+        "user": "urlshorteneradmin",
+        "password": "urlshorteneradminpasswd",
+        "dbname": "urlshortener"
     }
 }
