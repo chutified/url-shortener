@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS shortcuts (
+  id UUID PRIMARY KEY,
+  full TEXT NOT NULL,
+  short VARCHAR(255) NOT NULL UNIQUE,
+  usage INTEGER NOT NULL,
+  create_at TIMESTAMP NOT NULL,
+  updated_at TIMESTAM NOT NULL,
+  deleted_at TIMESTAMP
+)
