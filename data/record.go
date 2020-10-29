@@ -5,7 +5,10 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // Record is the unit of each shorten URL.  Record stores the time of its creation,
@@ -55,8 +58,20 @@ var (
 )
 
 func (s *service) AddRecord(ctx context.Context, r *Record) (*Record, error) {
-	//TODO
-	fmt.Println("Added record:", *r)
+
+	// validate values
+	if r.Full == "" || r.Short == "" {
+		return nil, ErrInvalidRecord
+	}
+
+	// process record
+	r = &Record{
+		ID:    uuid.New().String(),
+		Full:  strings.ToLower(r.Full),
+		Short: strings.ToLower(r.Short),
+		Usage: 0,
+	}
+
 	return nil, nil
 }
 
