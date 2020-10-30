@@ -233,8 +233,8 @@ func (h *handler) GetAllRecords(c *gin.Context) {
 
 	// get pagination data
 	pageStr := c.DefaultQuery("page", "1")
-	paginStr := c.DefaultQuery("pagin", "30")
-	sort := c.DefaultQuery("sort", "id")
+	paginStr := c.DefaultQuery("pagin", "100")
+	sort := c.DefaultQuery("sort", "created_at")
 
 	// convert page and pagin
 	page, err := strconv.Atoi(pageStr)
