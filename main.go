@@ -17,6 +17,7 @@ import (
 // enable recovery (with auth)
 // enable downloadstatistics (with auth)
 // frontend?
+// admin commands which eneables to see much more
 
 func main() {
 
