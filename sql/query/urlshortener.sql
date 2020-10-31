@@ -21,8 +21,15 @@ SET
   full_url = COALESCE($2, full_url),
   short_url = COALESCE($3, short_url)
 WHERE
-  deleted_at = NULL
-  AND shortcut_id = $1
+  shortcut_id = $1
+  AND deleted_at = NULL
+RETURNING shortcut_id, full_url, short_url;
+
+-- DeleteRecord
+UPDATE shortcuts
+SET
+  deleted_at = LOCALTIMESTAMP
+WHERE id = $1 AND deleted_at = NULL
 RETURNING shortcut_id, full_url, short_url;
 
 -- GetRecordByID
