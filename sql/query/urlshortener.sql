@@ -140,4 +140,7 @@ SET
   usage = usage + 1
 WHERE
   id = $1
-  AND deleted_at = NULL;
+  AND deleted_at = NULL
+RETURNING
+  shortcut_id,
+  usage;
