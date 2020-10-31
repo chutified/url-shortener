@@ -144,3 +144,9 @@ WHERE
 RETURNING
   shortcut_id,
   usage;
+
+-- GetTotalUsage
+SELECT
+  SUM(usage)
+FROM
+  shotcuts;

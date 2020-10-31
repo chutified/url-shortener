@@ -134,3 +134,9 @@ func (s *service) incrementUsage(ctx context.Context, id string) (*Record, error
 	fmt.Printf("Usage incremented (id %s)\n", id)
 	return nil, nil
 }
+
+func (s *service) TotalUsage(ctx context.Context) (int, error) {
+	// TODO
+	fmt.Println("Total usage served")
+	return -1, nil
+}
