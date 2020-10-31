@@ -120,6 +120,19 @@ WHERE
 LIMIT
   1;
 
+-- RecoveryRecord
+UPDATE
+  shortcuts
+SET
+  deleted_at = NULL
+WHERE
+  deleted_at != NULL
+  AND shortcut_id = $1
+RETURNING
+  shortcut_id,
+  full_url,
+  short_url;
+
 -- IncrementUsage
 UPDATE
   shortcuts
