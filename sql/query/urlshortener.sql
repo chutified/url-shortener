@@ -13,7 +13,6 @@ INSERT INTO
   shortcuts (shortcut_id, full_url, short_url)
 VALUES
   ($1, $2, $3);
-
 -- UpdateRecord
 UPDATE
   shortcuts
@@ -23,14 +22,23 @@ SET
 WHERE
   shortcut_id = $1
   AND deleted_at = NULL
-RETURNING shortcut_id, full_url, short_url;
+RETURNING
+  shortcut_id,
+  full_url,
+  short_url;
 
 -- DeleteRecord
-UPDATE shortcuts
+UPDATE
+  shortcuts
 SET
   deleted_at = LOCALTIMESTAMP
-WHERE id = $1 AND deleted_at = NULL
-RETURNING shortcut_id, full_url, short_url;
+WHERE
+  id = $1
+  AND deleted_at = NULL
+RETURNING
+  shortcut_id,
+  full_url,
+  short_url;
 
 -- GetRecordByID
 SELECT
