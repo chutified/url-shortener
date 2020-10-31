@@ -104,6 +104,22 @@ ORDER BY
 LIMIT
   $2 OFFSET $3;
 
+-- GetDetails
+SELECT
+  shortcut_id,
+  full_url,
+  short_url,
+  usage,
+  created_at,
+  updated_at
+FROM
+  shortcuts
+WHERE
+  id = $1
+  AND deleted_at = NULL
+LIMIT
+  1;
+
 -- IncrementUsage
 UPDATE
   shortcuts

@@ -116,3 +116,9 @@ func (s *service) GetAllRecords(ctx context.Context, pcfg PageCfg) ([]*Record, P
 	fmt.Printf("Served records sorted by %s (page %d, with pagin %d)\n", pcfg.Sort, pcfg.Page, pcfg.Pagin)
 	return nil, pcfg, nil
 }
+
+func (s *service) GetRecordDetails(ctx context.Context, id string) (*Record, error) {
+	//TODO
+	fmt.Printf("Served record's details (id %s)\n", id)
+	return nil, nil
+}
