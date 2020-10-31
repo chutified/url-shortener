@@ -36,7 +36,7 @@ UPDATE
 SET
   deleted_at = LOCALTIMESTAMP
 WHERE
-  id = $1
+  shortcut_id = $1
   AND deleted_at = NULL
 RETURNING
   shortcut_id,
@@ -115,7 +115,7 @@ SELECT
 FROM
   shortcuts
 WHERE
-  id = $1
+  shortcut_id = $1
   AND deleted_at = NULL
 LIMIT
   1;
@@ -139,7 +139,7 @@ UPDATE
 SET
   usage = usage + 1
 WHERE
-  id = $1
+  shortcut_id = $1
   AND deleted_at = NULL
 RETURNING
   shortcut_id,

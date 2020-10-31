@@ -33,7 +33,7 @@ type PageCfg struct {
 func (p *PageCfg) checkSort() {
 
 	// check if Sort attribute is valid
-	sortable := []string{"id", "full", "short", "usage", "created_at", "updated_at"}
+	sortable := []string{"shortcut_id", "full", "short", "usage", "created_at", "updated_at"}
 	for _, s := range sortable {
 		if p.Sort == s {
 			return
@@ -41,7 +41,7 @@ func (p *PageCfg) checkSort() {
 	}
 
 	// set default Sort value
-	p.Sort = "id"
+	p.Sort = "shortcut_id"
 }
 
 var (
