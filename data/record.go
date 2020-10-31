@@ -123,7 +123,7 @@ func (s *service) GetRecordDetails(ctx context.Context, id string) (*Record, err
 	return nil, nil
 }
 
-func (s *service) RecoveryRecord(ctx context.Context, id string) (*Record, error) {
+func (s *service) RecordRecovery(ctx context.Context, id string) (*Record, error) {
 	//TODO
 	fmt.Printf("Deleted record recoverd (id %s)\n", id)
 	return nil, nil

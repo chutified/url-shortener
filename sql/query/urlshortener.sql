@@ -120,7 +120,7 @@ WHERE
 LIMIT
   1;
 
--- RecoveryRecord
+-- RecordRecovery
 UPDATE
   shortcuts
 SET
