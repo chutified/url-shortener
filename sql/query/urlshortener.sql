@@ -102,3 +102,12 @@ ORDER BY
   $1
 LIMIT
   $2 OFFSET $3;
+
+-- IncrementUsage
+UPDATE
+  shortcuts
+SET
+  usage = usage + 1
+WHERE
+  id = $1
+  AND deleted_at = NULL;
