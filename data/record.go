@@ -128,3 +128,9 @@ func (s *service) RecordRecovery(ctx context.Context, id string) (*Record, error
 	fmt.Printf("Deleted record recoverd (id %s)\n", id)
 	return nil, nil
 }
+
+func (s *service) incrementUsage(ctx context.Context, id string) (*Record, error) {
+	// TODO
+	fmt.Printf("Usage incremented (id %s)\n", id)
+	return nil, nil
+}
