@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS shortcuts (
 INSERT INTO
   shortcuts (shortcut_id, full_url, short_url)
 VALUES
-  ($1, $2, $3);
+  ($1, $2, $3)
+ON CONFLICT (short_url) DO NOTHING;
+
 -- UpdateRecord
 UPDATE
   shortcuts
