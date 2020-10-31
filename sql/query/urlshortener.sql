@@ -14,6 +14,17 @@ INSERT INTO
 VALUES
   ($1, $2, $3);
 
+-- UpdateRecord
+UPDATE
+  shortcuts
+SET
+  full_url = COALESCE($2, full_url),
+  short_url = COALESCE($3, short_url)
+WHERE
+  deleted_at = NULL
+  AND shortcut_id = $1
+RETURNING shortcut_id, full_url, short_url;
+
 -- GetRecordByID
 SELECT
   shortcut_id,
