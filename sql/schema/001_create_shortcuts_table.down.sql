@@ -1,2 +1,2 @@
 -- +migrate Down
-DROP TABLE shortcuts;
+DROP TABLE IF EXISTS shortcuts;

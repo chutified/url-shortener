@@ -1,5 +1,5 @@
 -- +migrate Up
-CREATE TABLE shortcuts (
+CREATE TABLE IF NOT EXISTS shortcuts (
   shortcut_id UUID NOT NULL UNIQUE,
   full_url TEXT NOT NULL,
   short_url VARCHAR(255) NOT NULL UNIQUE,
