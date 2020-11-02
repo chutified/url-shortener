@@ -1,12 +1,11 @@
 CREATE TABLE IF NOT EXISTS shortcuts (
-  shortcut_id UUID NOT NULL UNIQUE,
+  shortcut_id UUID NOT NULL UNIQUE PRIMARY KEY,
   full_url TEXT NOT NULL,
   short_url VARCHAR(255) NOT NULL UNIQUE,
   usage INTEGER NOT NULL,
   create_at TIMESTAMP NOT NULL,
   updated_at TIMESTAMP NOT NULL,
-  deleted_at TIMESTAMP,
-  PRIMARY KEY(shortcut_id)
+  deleted_at TIMESTAMP
 );
 
 -- AddRecord
