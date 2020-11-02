@@ -33,7 +33,7 @@ RETURNING
 UPDATE
   shortcuts
 SET
-  deleted_at = LOCALTIMESTAMP
+  deleted_at = NOW()
 WHERE
   shortcut_id = $1
   AND deleted_at = NULL
