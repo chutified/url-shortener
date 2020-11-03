@@ -1,10 +1,10 @@
 version: "1"
 packages:
   - name: "db"
-  - path: "db"
+  - path: "api/db"
   - queries: "sql/query/"
   - schema: "sql/schema/"
-  - engine: "mysql"
+  - engine: "postgres"
   - emit_json_tags: false
   - emit_prepared_queries: false
   - emit_interface: false
