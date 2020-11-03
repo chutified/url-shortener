@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/chutified/url-shortener/config"
+	"github.com/chutified/url-shortener/api/config"
 )
 
 // Service is the controller of the data services.

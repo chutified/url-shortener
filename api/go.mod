@@ -1,4 +1,4 @@
-module github.com/chutified/url-shortener
+module github.com/chutified/url-shortener/api
 
 go 1.15
 

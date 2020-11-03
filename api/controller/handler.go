@@ -3,8 +3,8 @@ package controller
 import (
 	"fmt"
 
-	"github.com/chutified/url-shortener/config"
-	"github.com/chutified/url-shortener/data"
+	"github.com/chutified/url-shortener/api/config"
+	"github.com/chutified/url-shortener/api/data"
 )
 
 // handler is the controller of the data service actions.

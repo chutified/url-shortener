@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/chutified/url-shortener/config"
-	"github.com/chutified/url-shortener/controller"
+	"github.com/chutified/url-shortener/api/config"
+	"github.com/chutified/url-shortener/api/controller"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )

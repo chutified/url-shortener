@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/chutified/url-shortener/data"
+	"github.com/chutified/url-shortener/api/data"
 	"github.com/gin-gonic/gin"
 )
 
