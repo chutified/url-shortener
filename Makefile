@@ -1,5 +1,3 @@
-.PHONY: migrate-up migrate-down
-
 args = `arg="$(filter-out $@,$(MAKECMDGOALS))" && echo $${arg:-${1}}`
 
 migrate-up:
