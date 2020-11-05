@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS shortcuts (
   deleted_at TIMESTAMP
 );
 
--- AddRecord
+-- name: AddRecord :execresult
 INSERT INTO
   shortcuts (shortcut_id, full_url, short_url)
 VALUES
   ($1, $2, $3);
 
--- UpdateRecord
+-- name: UpdateRecord :execresult
 UPDATE
   shortcuts
 SET
@@ -28,7 +28,7 @@ RETURNING
   full_url,
   short_url;
 
--- DeleteRecord
+-- name: DeleteRecord :execresult
 UPDATE
   shortcuts
 SET
@@ -41,7 +41,7 @@ RETURNING
   full_url,
   short_url;
 
--- GetRecordByID
+-- name: GetRecordByID :one
 SELECT
   shortcut_id,
   full_url,
@@ -54,7 +54,7 @@ WHERE
 LIMIT
   1;
 
--- GetRecordByShort
+-- name: GetRecordByShort :one
 SELECT
   shortcut_id,
   full_url,
@@ -67,7 +67,7 @@ WHERE
 LIMIT
   1;
 
--- GetRecordByFull
+-- name: GetRecordByFull :one
 SELECT
   shortcut_id,
   full_url,
@@ -80,7 +80,7 @@ WHERE
 LIMIT
   1;
 
--- GetRecordsLen
+-- name: GetRecordsLen :one
 SELECT
   COUNT(*)
 FROM
@@ -88,7 +88,7 @@ FROM
 WHERE
   deleted_at = NULL;
 
--- GetAllRecords
+-- name: GetAllRecords :many
 SELECT
   shortcut_id,
   full_url,
@@ -102,7 +102,7 @@ ORDER BY
 LIMIT
   $2 OFFSET $3;
 
--- GetDetails
+-- name: GetDetails :one
 SELECT
   shortcut_id,
   full_url,
@@ -118,7 +118,7 @@ WHERE
 LIMIT
   1;
 
--- RecordRecovery
+-- name: RecordRecovery :execresult
 UPDATE
   shortcuts
 SET
@@ -131,7 +131,7 @@ RETURNING
   full_url,
   short_url;
 
--- IncrementUsage
+-- name: IncrementUsage :execresult
 UPDATE
   shortcuts
 SET
@@ -143,7 +143,7 @@ RETURNING
   shortcut_id,
   usage;
 
--- GetTotalUsage
+-- name: GetTotalUsage :one
 SELECT
   SUM(usage)
 FROM
