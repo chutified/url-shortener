@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/chutified/url-shortener/api/config"
@@ -18,13 +19,13 @@ func newHandler() *handler {
 }
 
 // initDataService initializes handler's data service.
-func (h *handler) initDataService(dbCfg *config.DB) error {
+func (h *handler) initDataService(ctx context.Context, dbCfg *config.DB) error {
 
 	// create new data service
 	h.ds = data.NewService()
 
 	// initialize data service
-	err := h.ds.InitDB(dbCfg)
+	err := h.ds.InitDB(ctx, dbCfg)
 	if err != nil {
 		return fmt.Errorf("failed to initialize data service: %w", err)
 	}

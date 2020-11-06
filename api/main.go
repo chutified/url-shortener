@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -21,9 +22,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	initCtx := context.Background()
 	// create server
 	srv := controller.NewServer()
-	err = srv.Set(cfg)
+	err = srv.Set(initCtx, cfg)
 	if err != nil {
 		log.Fatal(fmt.Errorf("failed to set server: %w", err))
 	}

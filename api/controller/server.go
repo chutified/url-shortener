@@ -11,7 +11,7 @@ import (
 
 // Server manages the whole web service runtime.
 type Server interface {
-	Set(*config.Config) error
+	Set(context.Context, *config.Config) error
 	Run() error
 	Stop() error
 	Close() error
@@ -31,14 +31,14 @@ func NewServer() Server {
 
 // Set prepares server to run. Set creates under the hood a new database connection
 // and server structure based on the given configuration + manage routings and endpoints.
-func (s *server) Set(cfg *config.Config) error {
+func (s *server) Set(ctx context.Context, cfg *config.Config) error {
 
 	// set timeout
 	s.srvTimeOut, _ = time.ParseDuration(cfg.SrvTimeOut)
 
 	// initialize handler
 	s.h = newHandler()
-	err := s.h.initDataService(cfg.DB)
+	err := s.h.initDataService(ctx, cfg.DB)
 	if err != nil {
 		return fmt.Errorf("can not init handler's data service: %w", err)
 	}

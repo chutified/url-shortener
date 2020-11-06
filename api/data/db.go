@@ -12,7 +12,7 @@ import (
 // Service is the controller of the data services.
 // Only DataService stores the database connection.
 type Service interface {
-	InitDB(*config.DB) error
+	InitDB(context.Context, *config.DB) error
 	StopDB() error
 	AddRecord(context.Context, *Record) (*Record, error)
 	UpdateRecord(context.Context, string, *Record) (*Record, error)
@@ -36,7 +36,7 @@ func NewService() Service {
 
 // InitDB intiliazes the database connection for the data server.
 // Valid credentials must be provided to connect to the database.
-func (s *service) InitDB(dbCfg *config.DB) error {
+func (s *service) InitDB(ctx context.Context, dbCfg *config.DB) error {
 
 	// retrieve db connection string
 	driver, connStr := dbCfg.ConnStr()
