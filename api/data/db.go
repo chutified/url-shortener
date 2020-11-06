@@ -2,11 +2,11 @@ package data
 
 import (
 	"context"
-	"database/sql"
 	"errors"
 	"fmt"
 
 	"github.com/chutified/url-shortener/api/config"
+	"github.com/jmoiron/sqlx"
 )
 
 // Service is the controller of the data services.
@@ -26,7 +26,7 @@ type Service interface {
 
 // service implements Service interface.
 type service struct {
-	DB *sql.DB
+	DB *sqlx.DB
 }
 
 // NewService is the contructor of the Service controller.
@@ -43,7 +43,7 @@ func (s *service) InitDB(ctx context.Context, dbCfg *config.DB) error {
 
 	// open connection to db
 	var err error
-	s.DB, err = sql.Open(driver, connStr)
+	s.DB, err = sqlx.ConnectContext(ctx, driver, connStr)
 	if err != nil {
 		return fmt.Errorf("failed to open db conn: %w", err)
 	}
