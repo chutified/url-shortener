@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"database/sql"
+	"database/sql/driver"
 	"errors"
 	"fmt"
 	"strings"
@@ -64,15 +65,25 @@ func (s *service) AddRecord(ctx context.Context, r *Record) (*Record, error) {
 		return nil, ErrInvalidRecord
 	}
 
-	// process record
-	r = &Record{
+	// create a record
+	newr := &Record{
 		ID:    uuid.New().String(),
 		Full:  strings.ToLower(r.Full),
 		Short: strings.ToLower(r.Short),
-		Usage: 0,
 	}
 
-	return nil, nil
+	// insert record
+	_, err := s.DB.ExecContext(ctx, `
+INSERT INTO
+  shortcuts (shortcut_id, full_url, short_url)
+VALUES
+  ($1, $2, $3);`,
+		newr.ID, newr.Full, newr.Short)
+	if err != driver.ErrBadConn {
+		return nil, ErrUnavailableShort
+	}
+
+	return newr, nil
 }
 
 func (s *service) UpdateRecord(ctx context.Context, id string, r *Record) (*Record, error) {
