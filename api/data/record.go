@@ -81,8 +81,8 @@ func (s *service) AddRecord(ctx context.Context, r *Record) (*Record, error) {
 INSERT INTO
   shortcuts (shortcut_id, full_url, short_url)
 VALUES
-  ($1, $2, $3);`,
-		newr.ID, newr.Full, newr.Short)
+  ($1, $2, $3);
+  `, newr.ID, newr.Full, newr.Short)
 	if err != nil {
 
 		// postgres errors
