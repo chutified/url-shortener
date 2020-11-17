@@ -100,9 +100,45 @@ VALUES
 }
 
 func (s *service) UpdateRecord(ctx context.Context, id string, r *Record) (*Record, error) {
-	//TODO
-	fmt.Printf("Updated record (id %s): %v\n", id, *r)
-	return nil, nil
+
+	// create record
+	updr := &Record{
+		ID:    id,
+		Full:  strings.ToLower(r.Full),
+		Short: strings.ToLower(r.Short),
+	}
+
+	// update record
+	result, err := s.DB.ExecContext(ctx, `
+UPDATE
+  shortcuts
+SET
+  full_url = COALESCE($2, full_url),
+  short_url = COALESCE($3, short_url)
+WHERE
+  shortcut_id = $1
+  AND deleted_at IS NULL;
+	`, updr.ID, newNullString(updr.Full), newNullString(updr.Short))
+	if err != nil {
+
+		// postgres errors
+		if err, ok := err.(*pq.Error); ok {
+			// unique violation
+			if err.Code == "23505" {
+				return nil, ErrUnavailableShort
+			}
+		}
+
+		return nil, fmt.Errorf("could not execute sql update; %w", err)
+	}
+
+	// check affected row
+	if n, _ := result.RowsAffected(); n != 1 {
+		fmt.Println(id)
+		return nil, ErrIDNotFound
+	}
+
+	return updr, nil
 }
 
 func (s *service) DeleteRecord(ctx context.Context, id string) (int, error) {
