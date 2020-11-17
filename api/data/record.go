@@ -3,13 +3,13 @@ package data
 import (
 	"context"
 	"database/sql"
-	"database/sql/driver"
 	"errors"
 	"fmt"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 // Record is the unit of each shorten URL.  Record stores the time of its creation,
@@ -79,8 +79,17 @@ INSERT INTO
 VALUES
   ($1, $2, $3);`,
 		newr.ID, newr.Full, newr.Short)
-	if err != driver.ErrBadConn {
-		return nil, ErrUnavailableShort
+	if err != nil {
+
+		// postgres errors
+		if err, ok := err.(*pq.Error); ok {
+			// unique violation
+			if err.Code == "23505" {
+				return nil, ErrUnavailableShort
+			}
+		}
+
+		return nil, fmt.Errorf("could not execute sql insert: %w", err)
 	}
 
 	return newr, nil
