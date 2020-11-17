@@ -58,6 +58,10 @@ var (
 	ErrUnavailableShort = errors.New("short of given record is already in use")
 )
 
+// AddRecord inserts a new record into the database. Only Full and Short
+// record's attributes must be set, other are omitted.
+// If any error occurs ErrInvalidRecord, ErrUnavailableShort or an unexpected
+// internal server error is returned.
 func (s *service) AddRecord(ctx context.Context, r *Record) (*Record, error) {
 
 	// validate values
