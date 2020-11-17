@@ -69,11 +69,6 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 	if err != nil {
 		switch err {
 
-		case data.ErrInvalidRecord:
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
-
 		case data.ErrUnavailableShort:
 			c.JSON(http.StatusConflict, gin.H{
 				"error": err.Error(),
