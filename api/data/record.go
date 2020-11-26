@@ -153,6 +153,9 @@ WHERE
 	return updr, nil
 }
 
+// DeleteRecord softly removes a record with the given id.
+// On success the function returns an ID of the deleted record
+// as a non-empty string.
 func (s *service) DeleteRecord(ctx context.Context, id string) (string, error) {
 
 	// id to lowercase
