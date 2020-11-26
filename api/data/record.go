@@ -130,9 +130,16 @@ WHERE
 
 		// postgres errors
 		if err, ok := err.(*pq.Error); ok {
+			switch err.Code {
+
 			// unique violation
-			if err.Code == "23505" {
+			case "23505":
 				return nil, ErrUnavailableShort
+
+				// invalid UUID
+			case "22P02":
+				return nil, ErrInvalidID
+
 			}
 		}
 

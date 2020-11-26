@@ -79,6 +79,11 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 				"error": err.Error(),
 			})
 
+		case data.ErrInvalidID:
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+
 		// server error
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{
