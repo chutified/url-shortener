@@ -136,10 +136,9 @@ WHERE
 			case "23505":
 				return nil, ErrUnavailableShort
 
-				// invalid UUID
+			// invalid UUID
 			case "22P02":
 				return nil, ErrInvalidID
-
 			}
 		}
 
