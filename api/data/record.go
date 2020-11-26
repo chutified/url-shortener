@@ -49,13 +49,15 @@ var (
 	// ErrInvalidRecord is returned when an invalid record is provided.
 	ErrInvalidRecord = errors.New("given record is invalid")
 	// ErrIDNotFound is returned when record's ID can not be found.
-	ErrIDNotFound = errors.New("given 'id' does not exist")
+	ErrIDNotFound = errors.New("given 'id' value does not exist")
 	// ErrShortNotFound is returned when record's Short can not be found.
-	ErrShortNotFound = errors.New("given 'short' does not exist")
+	ErrShortNotFound = errors.New("tgiven 'short' value does not exist")
 	// ErrFullNotFound is returned when record's Full can not be found.
-	ErrFullNotFound = errors.New("given 'full' does not exist")
+	ErrFullNotFound = errors.New("given 'full' value does not exist")
 	// ErrUnavailableShort is returned when the new record has a Short which already exists.
-	ErrUnavailableShort = errors.New("short of given record is already in use")
+	ErrUnavailableShort = errors.New("'short' value of the given record is already in use")
+	// ErrInvalidID is returned when an ID with invalid formatis provided.
+	ErrInvalidID = errors.New("given id has invalid format")
 )
 
 // AddRecord inserts a new record into the database. Only Full and Short
