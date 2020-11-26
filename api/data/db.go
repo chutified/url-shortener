@@ -12,16 +12,17 @@ import (
 // Service is the controller of the data services.
 // Only DataService stores the database connection.
 type Service interface {
-	InitDB(context.Context, *config.DB) error
-	StopDB() error
-	AddRecord(context.Context, *Record) (*Record, error)
-	UpdateRecord(context.Context, string, *Record) (*Record, error)
-	DeleteRecord(context.Context, string) (int, error)
-	GetRecordByID(context.Context, string) (*Record, error)
-	GetRecordByShort(context.Context, string) (*Record, error)
-	GetRecordByFull(context.Context, string) (*Record, error)
-	GetRecordsLen(ctx context.Context) (int, error)
-	GetAllRecords(context.Context, PageCfg) ([]*Record, PageCfg, error)
+	// TODO implement service interface
+	// InitDB(context.Context, *config.DB) error
+	// StopDB() error
+	// AddRecord(context.Context, *Record) (*Record, error)
+	// UpdateRecord(context.Context, string, *Record) (*Record, error)
+	// DeleteRecord(context.Context, string) (int, error)
+	// GetRecordByID(context.Context, string) (*Record, error)
+	// GetRecordByShort(context.Context, string) (*Record, error)
+	// GetRecordByFull(context.Context, string) (*Record, error)
+	// GetRecordsLen(ctx context.Context) (int, error)
+	// GetAllRecords(context.Context, PageCfg) ([]*Record, PageCfg, error)
 }
 
 // service implements Service interface.
