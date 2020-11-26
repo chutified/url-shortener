@@ -134,7 +134,6 @@ WHERE
 
 	// check affected row
 	if n, _ := result.RowsAffected(); n != 1 {
-		fmt.Println(id)
 		return nil, ErrIDNotFound
 	}
 
