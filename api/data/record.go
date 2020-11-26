@@ -103,7 +103,7 @@ func (s *service) UpdateRecord(ctx context.Context, id string, r *Record) (*Reco
 
 	// create record
 	updr := &Record{
-		ID:    id,
+		ID:    strings.ToLower(id),
 		Full:  strings.ToLower(r.Full),
 		Short: strings.ToLower(r.Short),
 	}
