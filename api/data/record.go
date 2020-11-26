@@ -153,10 +153,42 @@ WHERE
 	return updr, nil
 }
 
-func (s *service) DeleteRecord(ctx context.Context, id string) (int, error) {
-	//TODO
-	fmt.Printf("Deleted record id (%s)\n", id)
-	return 0, nil
+func (s *service) DeleteRecord(ctx context.Context, id string) (string, error) {
+
+	// id to lowercase
+	id = strings.ToLower(id)
+
+	// softly remove record
+	result, err := s.DB.ExecContext(ctx, `
+UPDATE
+  shortcuts
+SET
+  deleted_at = NOW()
+WHERE
+  shortcut_id = $1
+  AND deleted_at IS NULL;
+	`, id)
+	if err != nil {
+
+		// postres errors
+		if err, ok := err.(*pq.Error); ok {
+			switch err.Code {
+
+			// invalid text representation
+			case "22P02":
+				return "", ErrInvalidID
+			}
+		}
+
+		return "", fmt.Errorf("could not execute sql update; %w", err)
+	}
+
+	// check result
+	if n, _ := result.RowsAffected(); n != 1 {
+		return "", ErrIDNotFound
+	}
+
+	return id, nil
 }
 
 func (s *service) GetRecordByID(ctx context.Context, id string) (*Record, error) {
