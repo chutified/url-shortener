@@ -99,6 +99,11 @@ VALUES
 	return newr, nil
 }
 
+// UpdateRecord updates a record with the given id.
+// If the record is not found ErrIDNotFound is returned.
+// If the record r has a short which is already in use,
+// ErrUnavailableShort is returned. Any other errors
+// are server internal.
 func (s *service) UpdateRecord(ctx context.Context, id string, r *Record) (*Record, error) {
 
 	// create record
