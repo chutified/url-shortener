@@ -18,10 +18,10 @@ type Record struct {
 	ID        string       `json:"shortcut_id"`
 	Full      string       `json:"full_url"`
 	Short     string       `json:"short_url"`
-	Usage     int32        `json:"usage,omitempty"`
-	CreatedAt time.Time    `json:"created_at,omitempty"`
-	UpdatedAt time.Time    `json:"updated_at,omitempty"`
-	DeletedAt sql.NullTime `json:"deleted_at,omitempty"`
+	Usage     int32        `json:"usage"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at"`
+	DeletedAt sql.NullTime `json:"deleted_at"`
 }
 
 // PageCfg holds a configuration for retrieving large number of records.
@@ -194,10 +194,55 @@ WHERE
 	return id, nil
 }
 
+// GetRecordByID find a record in the database by uuid.
+// If no row is found the function returns ErrIDNotFound or
+// in case the given id does not follow standard UUID format, ErrInvalidID instead,
+// If any unexpected error occurs, unexpected server error is returned.
 func (s *service) GetRecordByID(ctx context.Context, id string) (*Record, error) {
-	//TODO
-	fmt.Printf("Served record (id %s)\n", id)
-	return nil, nil
+
+	// id to lowercase
+	id = strings.ToLower(id)
+
+	// query records
+	row := s.DB.QueryRowContext(ctx, `
+SELECT
+  shortcut_id,
+  full_url,
+  short_url,
+  usage,
+  created_at,
+  updated_at
+FROM
+  shortcuts
+WHERE
+  shortcut_id = $1
+  AND deleted_at IS NULL
+LIMIT 1;
+	`, id)
+
+	// scan row into new record
+	var r Record
+	err := row.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt)
+	if err == sql.ErrNoRows {
+		// nothing returned
+		return nil, ErrIDNotFound
+
+	} else if err != nil {
+
+		// postgres errors
+		if err, ok := err.(*pq.Error); ok {
+			switch err.Code {
+
+			// invalid text representation
+			case "22P02":
+				return nil, ErrInvalidID
+			}
+		}
+
+		return nil, fmt.Errorf("unexpected query error: %w", err)
+	}
+
+	return &r, nil
 }
 
 func (s *service) GetRecordByShort(ctx context.Context, short string) (*Record, error) {
@@ -222,12 +267,6 @@ func (s *service) GetAllRecords(ctx context.Context, pcfg PageCfg) ([]*Record, P
 	//TODO
 	fmt.Printf("Served records sorted by %s (page %d, with pagin %d)\n", pcfg.Sort, pcfg.Page, pcfg.Pagin)
 	return nil, pcfg, nil
-}
-
-func (s *service) GetRecordDetails(ctx context.Context, id string) (*Record, error) {
-	//TODO
-	fmt.Printf("Served record's details (id %s)\n", id)
-	return nil, nil
 }
 
 func (s *service) RecordRecovery(ctx context.Context, id string) (*Record, error) {

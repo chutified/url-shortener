@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/chutified/url-shortener/api/data"
 	"github.com/gin-gonic/gin"
@@ -163,13 +164,19 @@ func (h *handler) GetRecordByID(c *gin.Context) {
 
 	// record successfully retrieved
 	c.JSON(http.StatusOK, struct {
-		ID    string `json:"shortcut_id"`
-		Full  string `json:"full_url"`
-		Short string `json:"short_url"`
+		ID        string    `json:"shortcut_id"`
+		Full      string    `json:"full_url"`
+		Short     string    `json:"short_url"`
+		Usage     int32     `json:"usage"`
+		CreatedAt time.Time `json:"created_at"`
+		UpdatedAt time.Time `json:"updated_at"`
 	}{
-		ID:    r.ID,
-		Full:  r.Full,
-		Short: r.Short,
+		ID:        r.ID,
+		Full:      r.Full,
+		Short:     r.Short,
+		Usage:     r.Usage,
+		CreatedAt: r.CreatedAt,
+		UpdatedAt: r.UpdatedAt,
 	})
 }
 
