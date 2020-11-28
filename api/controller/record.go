@@ -162,7 +162,15 @@ func (h *handler) GetRecordByID(c *gin.Context) {
 	}
 
 	// record successfully retrieved
-	c.JSON(http.StatusOK, r)
+	c.JSON(http.StatusOK, struct {
+		ID    string `json:"shortcut_id"`
+		Full  string `json:"full_url"`
+		Short string `json:"short_url"`
+	}{
+		ID:    r.ID,
+		Full:  r.Full,
+		Short: r.Short,
+	})
 }
 
 // GetRecordByShort serves a record with the certain Short value.
