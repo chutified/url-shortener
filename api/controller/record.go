@@ -113,6 +113,11 @@ func (h *handler) DeleteRecord(c *gin.Context) {
 				"error": err.Error(),
 			})
 
+		case data.ErrInvalidID:
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": err.Error(),
@@ -140,6 +145,11 @@ func (h *handler) GetRecordByID(c *gin.Context) {
 
 		case data.ErrIDNotFound:
 			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+
+		case data.ErrInvalidID:
+			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 
