@@ -15,9 +15,9 @@ import (
 // Record is the unit of each shorten URL.  Record stores the time of its creation,
 // update and deletion. All Short atributes must be unique. Full can have duplicates.
 type Record struct {
-	ID        string       `json:"shortcut_id,omitempty"`
-	Full      string       `json:"full_url,omitempty"`
-	Short     string       `json:"short_url,omitempty"`
+	ID        string       `json:"shortcut_id"`
+	Full      string       `json:"full_url"`
+	Short     string       `json:"short_url"`
 	Usage     int32        `json:"usage,omitempty"`
 	CreatedAt time.Time    `json:"created_at,omitempty"`
 	UpdatedAt time.Time    `json:"updated_at,omitempty"`
