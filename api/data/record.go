@@ -246,9 +246,39 @@ LIMIT 1;
 }
 
 func (s *service) GetRecordByShort(ctx context.Context, short string) (*Record, error) {
-	//TODO
-	fmt.Printf("Served record (short %s)\n", short)
-	return nil, nil
+
+	// short to lowercase
+	short = strings.ToLower(short)
+
+	// select the record
+	row := s.DB.QueryRowContext(ctx, `
+SELECT
+  shortcut_id,
+  full_url,
+  short_url,
+  usage,
+  created_at,
+  updated_at
+FROM
+  shortcuts
+WHERE
+  short_url = $1
+  AND deleted_at IS NULL
+LIMIT 1;
+	`, short)
+
+	// scan row into a new record
+	var r Record
+	err := row.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt)
+	if err == sql.ErrNoRows {
+		// nothing resturned
+		return nil, ErrShortNotFound
+
+	} else if err != nil {
+		return nil, fmt.Errorf("unexpected sql query error: %w", err)
+	}
+
+	return &r, nil
 }
 
 func (s *service) GetRecordByFull(ctx context.Context, full string) (*Record, error) {

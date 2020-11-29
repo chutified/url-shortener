@@ -3,7 +3,6 @@ package controller
 import (
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/chutified/url-shortener/api/data"
 	"github.com/gin-gonic/gin"
