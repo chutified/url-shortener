@@ -19,7 +19,6 @@ func (h *handler) getHTTPHandler() http.Handler {
 	v1 := r.Group("/v1")
 	{
 		v1.GET("/book/short/:record_short", h.GetRecordByShort)
-		v1.GET("/book/full/:record_full", h.GetRecordByFull)
 		v1.GET("/book/id/:record_id", h.GetRecordByID)
 
 		v1.GET("/books/len", h.GetRecordsLen)

@@ -283,12 +283,6 @@ LIMIT 1;
 	return &r, nil
 }
 
-func (s *service) GetRecordByFull(ctx context.Context, full string) (*Record, error) {
-	//TODO
-	fmt.Printf("Served record (full %s)\n", full)
-	return nil, nil
-}
-
 func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
 	//TODO
 	fmt.Println("Served number of records.")
