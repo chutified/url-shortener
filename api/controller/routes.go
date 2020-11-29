@@ -18,15 +18,15 @@ func (h *handler) getHTTPHandler() http.Handler {
 	// V1
 	v1 := r.Group("/v1")
 	{
-		v1.GET("/book/short/:record_short", h.GetRecordByShort)
-		v1.GET("/book/id/:record_id", h.GetRecordByID)
+		v1.GET("/url/short/:record_short", h.GetRecordByShort)
+		v1.GET("/url/id/:record_id", h.GetRecordByID)
 
-		v1.GET("/books/len", h.GetRecordsLen)
-		v1.GET("/books", h.GetAllRecords)
+		v1.GET("/urls/len", h.GetRecordsLen)
+		v1.GET("/urls", h.GetAllRecords)
 
-		v1.POST("/book", h.AddRecord)
-		v1.PUT("/book/:record_id", h.UpdateRecord)
-		v1.DELETE("/book/:record_id", h.DeleteRecord)
+		v1.POST("/url", h.AddRecord)
+		v1.PUT("/url/:record_id", h.UpdateRecord)
+		v1.DELETE("/url/:record_id", h.DeleteRecord)
 	}
 
 	return r
