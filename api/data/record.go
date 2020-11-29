@@ -51,7 +51,7 @@ var (
 	// ErrIDNotFound is returned when record's ID can not be found.
 	ErrIDNotFound = errors.New("given 'id' value does not exist")
 	// ErrShortNotFound is returned when record's Short can not be found.
-	ErrShortNotFound = errors.New("tgiven 'short' value does not exist")
+	ErrShortNotFound = errors.New("given 'short' value does not exist")
 	// ErrFullNotFound is returned when record's Full can not be found.
 	ErrFullNotFound = errors.New("given 'full' value does not exist")
 	// ErrUnavailableShort is returned when the new record has a Short which already exists.
