@@ -245,6 +245,8 @@ LIMIT 1;
 	return &r, nil
 }
 
+// GetRecordByShort is an alternative of GetRecordByID which uses
+// short atribute for querying instead of an ID.
 func (s *service) GetRecordByShort(ctx context.Context, short string) (*Record, error) {
 
 	// short to lowercase
