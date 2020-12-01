@@ -21,7 +21,7 @@ func (h *handler) getHTTPHandler() http.Handler {
 		v1.GET("/url/short/:record_short", h.GetRecordByShort)
 		v1.GET("/url/id/:record_id", h.GetRecordByID)
 
-		v1.GET("/urls/len", h.GetRecordsLen)
+		v1.GET("/urls/l", h.GetRecordsLen)
 		v1.GET("/urls", h.GetAllRecords)
 
 		v1.POST("/url", h.AddRecord)
