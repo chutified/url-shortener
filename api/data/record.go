@@ -284,9 +284,25 @@ LIMIT 1;
 }
 
 func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
-	//TODO
-	fmt.Println("Served number of records.")
-	return 0, nil
+
+	// query database
+	row := s.DB.QueryRowContext(ctx, `
+SELECT
+  COUNT(*)
+FROM
+  shortcuts
+WHERE
+  deleted_at IS NOT NULL;
+	`)
+
+	// scan row
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		return 0, fmt.Errorf("unexpected sql query error: %w", err)
+	}
+
+	return count, nil
 }
 
 func (s *service) GetAllRecords(ctx context.Context, pcfg PageCfg) ([]*Record, PageCfg, error) {
