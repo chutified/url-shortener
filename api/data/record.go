@@ -294,7 +294,7 @@ SELECT
 FROM
   shortcuts
 WHERE
-  deleted_at IS NOT NULL;
+  deleted_at IS NULL;
 	`)
 
 	// scan row
