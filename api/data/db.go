@@ -21,7 +21,7 @@ type Service interface {
 	GetRecordByShort(context.Context, string) (*Record, error)
 	GetRecordsLen(ctx context.Context) (int, error)
 	GetAllRecords(context.Context, PageCfg) ([]*Record, PageCfg, error)
-	RecordRecovery(context.Context, string) (*Record, error)
+	RecordRecovery(context.Context, string) (string, error)
 	TotalUsage(context.Context) (int, error)
 }
 

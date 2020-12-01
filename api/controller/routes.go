@@ -27,6 +27,7 @@ func (h *handler) getHTTPHandler() http.Handler {
 		v1.POST("/url", h.AddRecord)
 		v1.PUT("/url/:record_id", h.UpdateRecord)
 		v1.DELETE("/url/:record_id", h.DeleteRecord)
+		v1.POST("/url/recovery/:record_id", h.RecordRecovery)
 	}
 
 	return r

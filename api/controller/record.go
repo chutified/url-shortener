@@ -249,3 +249,39 @@ func (h *handler) GetAllRecords(c *gin.Context) {
 		"result":      rs,
 	})
 }
+
+// RecordRecovery tries to recover a softly deleted record.
+func (h *handler) RecordRecovery(c *gin.Context) {
+
+	// load id
+	id := c.Param("record_id")
+
+	// recover a record
+	rid, err := h.ds.RecordRecovery(c, id)
+	if err != nil {
+		switch err {
+
+		case data.ErrIDNotFound:
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+
+		case data.ErrInvalidID:
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+
+		// server error
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+		return
+	}
+
+	// record successfully recovered
+	c.JSON(http.StatusOK, gin.H{
+		"recovered_id": rid,
+	})
+}

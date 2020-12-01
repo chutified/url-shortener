@@ -313,10 +313,43 @@ func (s *service) GetAllRecords(ctx context.Context, pcfg PageCfg) ([]*Record, P
 	return nil, pcfg, nil
 }
 
-func (s *service) RecordRecovery(ctx context.Context, id string) (*Record, error) {
-	//TODO
-	fmt.Printf("Deleted record recoverd (id %s)\n", id)
-	return nil, nil
+// RecordRecovery recovers the solftly deleted records.
+func (s *service) RecordRecovery(ctx context.Context, id string) (string, error) {
+
+	// id to lowercase
+	id = strings.ToLower(id)
+
+	// recover removed Record
+	result, err := s.DB.ExecContext(ctx, `
+UPDATE
+  shortcuts
+SET
+  deleted_at = NULL
+WHERE
+  shortcut_id = $1
+  AND deleted_at IS NOT NULL;
+	`, id)
+	if err != nil {
+
+		// postgres errors
+		if err, ok := err.(*pq.Error); ok {
+			switch err.Code {
+
+			// invalid text representation
+			case "22P02":
+				return "", ErrInvalidID
+			}
+		}
+
+		return "", fmt.Errorf("could not execute sql update; %w", err)
+	}
+
+	// check result
+	if n, _ := result.RowsAffected(); n != 1 {
+		return "", ErrIDNotFound
+	}
+
+	return id, nil
 }
 
 func (s *service) incrementUsage(ctx context.Context, id string) (*Record, error) {
