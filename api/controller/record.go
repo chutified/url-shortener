@@ -202,6 +202,7 @@ func (h *handler) GetRecordsLen(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 
 	// records length successfully retrieved
@@ -241,6 +242,7 @@ func (h *handler) GetAllRecords(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
+		return
 	}
 
 	// records successfully retrieved
