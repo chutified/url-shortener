@@ -24,27 +24,6 @@ type Record struct {
 	DeletedAt sql.NullTime `json:"deleted_at"`
 }
 
-// PageCfg holds a configuration for retrieving large number of records.
-type PageCfg struct {
-	Page  int    `json:"page"`
-	Pagin int    `json:"pagin"`
-	Sort  string `json:"sort"`
-}
-
-func (p *PageCfg) checkSort() {
-
-	// check if Sort attribute is valid
-	sortable := []string{"shortcut_id", "full", "short", "usage", "created_at", "updated_at"}
-	for _, s := range sortable {
-		if p.Sort == s {
-			return
-		}
-	}
-
-	// set default Sort value
-	p.Sort = "shortcut_id"
-}
-
 var (
 	// ErrInvalidRecord is returned when an invalid record is provided.
 	ErrInvalidRecord = errors.New("given record is unavailable")

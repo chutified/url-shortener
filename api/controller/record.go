@@ -2,7 +2,6 @@ package controller
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/chutified/url-shortener/api/data"
 	"github.com/gin-gonic/gin"
@@ -213,31 +212,8 @@ func (h *handler) GetRecordsLen(c *gin.Context) {
 
 // GetAllRecords returns xth page with a certain number of records.
 func (h *handler) GetAllRecords(c *gin.Context) {
-
-	// get pagination data
-	pageStr := c.DefaultQuery("page", "1")
-	paginStr := c.DefaultQuery("pagin", "100")
-	sort := c.DefaultQuery("sort", "created_at")
-
-	// convert page and pagin
-	page, err := strconv.Atoi(pageStr)
-	if err != nil {
-		page = 1
-	}
-	pagin, err := strconv.Atoi(paginStr)
-	if err != nil {
-		pagin = 30
-	}
-
-	// declare PageCfg
-	pcfg := data.PageCfg{
-		Page:  page,
-		Pagin: pagin,
-		Sort:  sort,
-	}
-
 	// get records
-	rs, pgcfgG, err := h.ds.GetAllRecords(c, pcfg)
+	rs, err := h.ds.GetAllRecords(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -246,10 +222,7 @@ func (h *handler) GetAllRecords(c *gin.Context) {
 	}
 
 	// records successfully retrieved
-	c.JSON(http.StatusOK, gin.H{
-		"page_config": pgcfgG,
-		"result":      rs,
-	})
+	c.JSON(http.StatusOK, rs)
 }
 
 // RecordRecovery tries to recover a softly deleted record.
