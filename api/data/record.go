@@ -286,10 +286,49 @@ WHERE
 	return count, nil
 }
 
-func (s *service) GetAllRecords(ctx context.Context, pcfg PageCfg) ([]*Record, PageCfg, error) {
-	//TODO
-	fmt.Printf("Served records sorted by %s (page %d, with pagin %d)\n", pcfg.Sort, pcfg.Page, pcfg.Pagin)
-	return nil, pcfg, nil
+// GetAllRecords returns all records stored in the database.
+func (s *service) GetAllRecords(ctx context.Context) ([]*Record, error) {
+
+	// retrieve all records
+	rows, err := s.DB.QueryContext(ctx, `
+SELECT
+  shortcut_id,
+  full_url,
+  short_url,
+  usage,
+  created_at,
+  updated_at,
+  deleted_at
+FROM
+  shortcuts
+WHERE
+  deleted_at is NULL
+ORDER BY
+  usage;
+	`)
+	defer rows.Close()
+
+	// scan each record
+	var records []*Record
+	for rows.Next() {
+
+		// create new record
+		var r Record
+		err := rows.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt, &r.DeletedAt)
+		if err != nil {
+			return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
+		}
+
+		// store
+		records = append(records, &r)
+	}
+
+	// err check
+	if err != nil {
+		return nil, fmt.Errorf("unexpected server error: %w", err)
+	}
+
+	return records, nil
 }
 
 // RecordRecovery recovers the solftly deleted records.
