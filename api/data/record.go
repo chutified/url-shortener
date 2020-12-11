@@ -370,6 +370,27 @@ WHERE
 	return id, nil
 }
 
+// TotalUsage returns a sum of usage of all records (include deleted one).
+func (s *service) TotalUsage(ctx context.Context) (int, error) {
+
+	// query
+	row := s.DB.QueryRowContext(ctx, `
+SELECT
+  SUM(usage)
+FROM
+  shortcuts;
+	`)
+
+	// scan
+	var sum int
+	err := row.Scan(&sum)
+	if err != nil {
+		return 0, fmt.Errorf("unexpected error: %w", err)
+	}
+
+	return sum, nil
+}
+
 // incrementUsage increments usage column at record's with the given id.
 func (s *service) incrementUsage(ctx context.Context, id string) error {
 
@@ -390,10 +411,4 @@ WHERE
 	}
 
 	return err
-}
-
-func (s *service) TotalUsage(ctx context.Context) (int, error) {
-	// TODO
-	fmt.Println("Total usage served")
-	return -1, nil
 }
