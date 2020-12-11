@@ -260,3 +260,22 @@ func (h *handler) RecordRecovery(c *gin.Context) {
 		"recovered_id": rid,
 	})
 }
+
+// TotalUsage serves sum of usages.
+func (h *handler) TotalUsage(c *gin.Context) {
+
+	// get total usage
+	usage, err := h.ds.TotalUsage(c)
+	if err != nil {
+		// unexpected server error
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	// total usage successfully retrieved
+	c.JSON(http.StatusOK, gin.H{
+		"total_usage": usage,
+	})
+}
