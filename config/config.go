@@ -50,6 +50,7 @@ func GetConfig(file string) (*Config, error) {
 	if dbconn == "" {
 		return nil, errors.New("environment variable of url (URL_SHORTENER_DBCONN) for database connection is not set")
 	}
+	cfg.DB.DBConn = dbconn
 
 	// validate server timeout
 	_, err = time.ParseDuration(cfg.SrvTimeOut)

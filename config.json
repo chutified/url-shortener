@@ -1,12 +1,5 @@
 {
-    "server_port": 8080,
-    "server_timeout": "10s",
-    "db": {
-        "driver": "postgres",
-        "host": "127.0.0.1",
-        "port": 5432,
-        "user": "urlshorteneradmin",
-        "password": "urlshorteneradminpasswd",
-        "dbname": "urlshortener"
-    }
+  "server_port": 8080,
+  "server_timeout": "10s",
+  "db": { "driver": "postgres" }
 }
