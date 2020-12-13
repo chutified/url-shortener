@@ -42,7 +42,13 @@ func GetConfig(file string) (*Config, error) {
 
 	// validate config's driver
 	if cfg.DB.Driver != "postgres" {
-		return nil, errors.New("invalid/not suported database dialect: " + cfg.DB.Driver)
+		return nil, errors.New("not supported sql database driver")
+	}
+
+	// check for database connection environment variable
+	dbconn := os.Getenv("URL_SHORTENER_DBCONN")
+	if dbconn == "" {
+		return nil, errors.New("environment variable of url (URL_SHORTENER_DBCONN) for database connection is not set")
 	}
 
 	// validate server timeout
