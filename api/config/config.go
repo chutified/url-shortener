@@ -41,13 +41,7 @@ func GetConfig(file string) (*Config, error) {
 	}
 
 	// validate config's driver
-	ok := false
-	for _, d := range dialects {
-		if cfg.DB.Driver == d {
-			ok = true
-		}
-	}
-	if !ok {
+	if cfg.DB.Driver != "postgres" {
 		return nil, errors.New("invalid/not suported database dialect: " + cfg.DB.Driver)
 	}
 
