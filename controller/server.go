@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/chutified/url-shortener/api/config"
+	"github.com/chutified/url-shortener/config"
 )
 
 // Server manages the whole web service runtime.

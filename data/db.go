@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/chutified/url-shortener/api/config"
+	"github.com/chutified/url-shortener/config"
 	"github.com/jmoiron/sqlx"
 )
 
