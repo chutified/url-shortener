@@ -282,6 +282,7 @@ func (s *service) GetRecordByShortPeek(ctx context.Context, short string) (strin
 	// get full url
 	row := s.DB.QueryRowContext(ctx, `
 SELECT
+  shortcut_id,
   full_url
 FROM
   shortcuts
@@ -292,14 +293,17 @@ LIMIT 1;
 	`, short)
 
 	// scan full url
-	var full string
-	err := row.Scan(&full)
+	var id, full string
+	err := row.Scan(&id, &full)
 	if err == sql.ErrNoRows {
 		return "", ErrShortNotFound
 
 	} else if err != nil {
 		return "", fmt.Errorf("unexpected sql query error: %w", err)
 	}
+
+	// increment record's usage
+	s.incrementUsage(ctx, id)
 
 	return full, nil
 }
