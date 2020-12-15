@@ -19,6 +19,7 @@ type Service interface {
 	DeleteRecord(context.Context, string) (string, error)
 	GetRecordByID(context.Context, string) (*Record, error)
 	GetRecordByShort(context.Context, string) (*Record, error)
+	GetRecordByShortPeek(context.Context, string) (string, error)
 	GetRecordsLen(ctx context.Context) (int, error)
 	GetAllRecords(context.Context) ([]*ShortRecord, error)
 	RecordRecovery(context.Context, string) (string, error)

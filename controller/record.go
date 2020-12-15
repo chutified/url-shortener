@@ -192,6 +192,36 @@ func (h *handler) GetRecordByShort(c *gin.Context) {
 	c.JSON(http.StatusOK, r)
 }
 
+// GetRecordByShortPeek serves a full url of the shortcut.
+func (h *handler) GetRecordByShortPeek(c *gin.Context) {
+
+	// get short
+	short := c.Param("record_short")
+
+	// get full url
+	full, err := h.ds.GetRecordByShortPeek(c, short)
+	if err != nil {
+		switch err {
+
+		case data.ErrShortNotFound:
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "unexpected server error",
+			})
+		}
+		return
+	}
+
+	// found
+	c.JSON(http.StatusOK, gin.H{
+		"url": full,
+	})
+}
+
 // GetRecordsLen returns a total number of records.
 func (h *handler) GetRecordsLen(c *gin.Context) {
 

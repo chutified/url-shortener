@@ -272,6 +272,38 @@ LIMIT 1;
 	return &r, nil
 }
 
+// GetRecordByShort finds and returns the full version which corresponds
+// to the given short url.
+func (s *service) GetRecordByShortPeek(ctx context.Context, short string) (string, error) {
+
+	// short to lowercase
+	short = strings.ToLower(short)
+
+	// get full url
+	row := s.DB.QueryRowContext(ctx, `
+SELECT
+  full_url
+FROM
+  shortcuts
+WHERE
+  short_url = $1
+  AND deleted_at IS NULL
+LIMIT 1;
+	`, short)
+
+	// scan full url
+	var full string
+	err := row.Scan(&full)
+	if err == sql.ErrNoRows {
+		return "", ErrShortNotFound
+
+	} else if err != nil {
+		return "", fmt.Errorf("unexpected sql query error: %w", err)
+	}
+
+	return full, nil
+}
+
 // GetRecordsLen returns the number of active urls.
 // Only unexpected errors can occurre.
 func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
