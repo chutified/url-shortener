@@ -86,7 +86,7 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 		// server error
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
+				"error": "unexpected server error",
 			})
 		}
 		return
@@ -119,7 +119,7 @@ func (h *handler) DeleteRecord(c *gin.Context) {
 
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
+				"error": "unexpected server error",
 			})
 		}
 		return
@@ -154,7 +154,7 @@ func (h *handler) GetRecordByID(c *gin.Context) {
 
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
+				"error": "unexpected server error",
 			})
 		}
 		return
@@ -182,7 +182,7 @@ func (h *handler) GetRecordByShort(c *gin.Context) {
 
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
+				"error": "unexpected server error",
 			})
 		}
 		return
@@ -199,7 +199,7 @@ func (h *handler) GetRecordsLen(c *gin.Context) {
 	l, err := h.ds.GetRecordsLen(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
+			"error": "unexpected server error",
 		})
 		return
 	}
@@ -216,7 +216,7 @@ func (h *handler) GetAllRecords(c *gin.Context) {
 	rs, err := h.ds.GetAllRecords(c)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
+			"error": "unexpected server error",
 		})
 		return
 	}
