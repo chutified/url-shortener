@@ -54,7 +54,7 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 	id := c.Param("record_id")
 
 	// bind record
-	var newr data.Record
+	var newr data.ShortRecord
 	err := c.ShouldBindJSON(&newr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

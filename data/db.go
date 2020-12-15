@@ -14,13 +14,13 @@ import (
 type Service interface {
 	InitDB(context.Context, *config.DB) error
 	StopDB() error
-	AddRecord(context.Context, *Record) (*Record, error)
-	UpdateRecord(context.Context, string, *Record) (*Record, error)
+	AddRecord(context.Context, *Record) (*ShortRecord, error)
+	UpdateRecord(context.Context, string, *ShortRecord) (*ShortRecord, error)
 	DeleteRecord(context.Context, string) (string, error)
 	GetRecordByID(context.Context, string) (*Record, error)
 	GetRecordByShort(context.Context, string) (*Record, error)
 	GetRecordsLen(ctx context.Context) (int, error)
-	GetAllRecords(context.Context) ([]*Record, error)
+	GetAllRecords(context.Context) ([]*ShortRecord, error)
 	RecordRecovery(context.Context, string) (string, error)
 	TotalUsage(context.Context) (int, error)
 }

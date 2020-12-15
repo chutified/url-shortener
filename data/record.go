@@ -18,10 +18,17 @@ type Record struct {
 	ID        string       `json:"shortcut_id"`
 	Full      string       `json:"full_url"`
 	Short     string       `json:"short_url"`
-	Usage     int32        `json:"-"`
-	CreatedAt time.Time    `json:"-"`
-	UpdatedAt time.Time    `json:"-"`
+	Usage     int32        `json:"usage"`
+	CreatedAt time.Time    `json:"created_at"`
+	UpdatedAt time.Time    `json:"updated_at"`
 	DeletedAt sql.NullTime `json:"-"`
+}
+
+// ShortRecord represents shorter version of the Record.
+type ShortRecord struct {
+	ID    string `json:"shortcut_id"`
+	Full  string `json:"full_url"`
+	Short string `json:"short_url"`
 }
 
 var (
@@ -43,7 +50,7 @@ var (
 // record's attributes must be set, other are omitted.
 // If any error occurs ErrInvalidRecord, ErrUnavailableShort or an unexpected
 // internal server error is returned.
-func (s *service) AddRecord(ctx context.Context, r *Record) (*Record, error) {
+func (s *service) AddRecord(ctx context.Context, r *Record) (*ShortRecord, error) {
 
 	// validate values
 	if r.Full == "" || r.Short == "" {
@@ -51,7 +58,7 @@ func (s *service) AddRecord(ctx context.Context, r *Record) (*Record, error) {
 	}
 
 	// create a record
-	newr := &Record{
+	newr := &ShortRecord{
 		ID:    uuid.New().String(),
 		Full:  strings.ToLower(r.Full),
 		Short: strings.ToLower(r.Short),
@@ -85,10 +92,10 @@ VALUES
 // If the record r has a short which is already in use,
 // ErrUnavailableShort is returned. Any other errors
 // are server internal.
-func (s *service) UpdateRecord(ctx context.Context, id string, r *Record) (*Record, error) {
+func (s *service) UpdateRecord(ctx context.Context, id string, r *ShortRecord) (*ShortRecord, error) {
 
 	// create record
-	updr := &Record{
+	updr := &ShortRecord{
 		ID:    strings.ToLower(id),
 		Full:  strings.ToLower(r.Full),
 		Short: strings.ToLower(r.Short),
@@ -287,7 +294,7 @@ WHERE
 }
 
 // GetAllRecords returns all records stored in the database.
-func (s *service) GetAllRecords(ctx context.Context) ([]*Record, error) {
+func (s *service) GetAllRecords(ctx context.Context) ([]*ShortRecord, error) {
 
 	// retrieve all records
 	rows, err := s.DB.QueryContext(ctx, `
@@ -309,12 +316,12 @@ ORDER BY
 	defer rows.Close()
 
 	// scan each record
-	var records []*Record
+	var records []*ShortRecord
 	for rows.Next() {
 
 		// create new record
-		var r Record
-		err := rows.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt, &r.DeletedAt)
+		var r ShortRecord
+		err := rows.Scan(&r.ID, &r.Full, &r.Short)
 		if err != nil {
 			return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
 		}
