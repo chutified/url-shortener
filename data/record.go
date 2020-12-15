@@ -45,6 +45,8 @@ var (
 	ErrUnavailableShort = errors.New("'short' value of the given record is already in use")
 	// ErrInvalidID is returned when an ID with invalid formatis provided.
 	ErrInvalidID = errors.New("given id has invalid format")
+	// ErrNotDeleted is returned when the record is not deleted.
+	ErrNotDeleted = errors.New("record with the given id is either not deleted or does not exist")
 )
 
 // AddRecord inserts a new record into the database. Only Full and Short
@@ -369,7 +371,7 @@ WHERE
 
 	// check result
 	if n, _ := result.RowsAffected(); n != 1 {
-		return "", ErrIDNotFound
+		return "", ErrNotDeleted
 	}
 
 	return id, nil

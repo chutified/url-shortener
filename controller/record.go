@@ -236,7 +236,7 @@ func (h *handler) RecordRecovery(c *gin.Context) {
 	if err != nil {
 		switch err {
 
-		case data.ErrIDNotFound:
+		case data.ErrNotDeleted:
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
