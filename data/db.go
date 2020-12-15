@@ -22,7 +22,6 @@ type Service interface {
 	GetRecordsLen(ctx context.Context) (int, error)
 	GetAllRecords(context.Context) ([]*ShortRecord, error)
 	RecordRecovery(context.Context, string) (string, error)
-	TotalUsage(context.Context) (int, error)
 }
 
 // service implements Service interface.
