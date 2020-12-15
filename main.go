@@ -17,7 +17,7 @@ import (
 func main() {
 
 	// get configuration
-	cfg, err := config.GetConfig("config.json")
+	cfg, err := config.GetConfig("settings.json")
 	if err != nil {
 		log.Fatal(err)
 	}
