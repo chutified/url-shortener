@@ -127,7 +127,7 @@ func (h *handler) DeleteRecord(c *gin.Context) {
 
 	// record successfully deleted
 	c.JSON(http.StatusOK, gin.H{
-		"id": did,
+		"delete_record_id": did,
 	})
 }
 
