@@ -29,6 +29,7 @@ type ShortRecord struct {
 	ID    string `json:"shortcut_id"`
 	Full  string `json:"full_url"`
 	Short string `json:"short_url"`
+	Usage int32  `json:"usage"`
 }
 
 var (
@@ -293,7 +294,7 @@ WHERE
 	return count, nil
 }
 
-// GetAllRecords returns all records stored in the database.
+// GetAllRecords returns all active records in the database.
 func (s *service) GetAllRecords(ctx context.Context) ([]*ShortRecord, error) {
 
 	// retrieve all records
@@ -302,10 +303,7 @@ SELECT
   shortcut_id,
   full_url,
   short_url,
-  usage,
-  created_at,
-  updated_at,
-  deleted_at
+  usage
 FROM
   shortcuts
 WHERE
@@ -321,7 +319,7 @@ ORDER BY
 
 		// create new record
 		var r ShortRecord
-		err := rows.Scan(&r.ID, &r.Full, &r.Short)
+		err := rows.Scan(&r.ID, &r.Full, &r.Short, &r.Usage)
 		if err != nil {
 			return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
 		}
