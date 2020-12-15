@@ -10,7 +10,6 @@ import (
 
 	"github.com/chutified/url-shortener/config"
 	"github.com/chutified/url-shortener/controller"
-	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
