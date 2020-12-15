@@ -26,7 +26,7 @@ type Record struct {
 
 var (
 	// ErrInvalidRecord is returned when an invalid record is provided.
-	ErrInvalidRecord = errors.New("given record is unavailable")
+	ErrInvalidRecord = errors.New("given record is invalid ")
 	// ErrIDNotFound is returned when record's ID can not be found.
 	ErrIDNotFound = errors.New("given 'id' value does not exist")
 	// ErrShortNotFound is returned when record's Short can not be found.

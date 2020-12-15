@@ -37,7 +37,7 @@ func (h *handler) AddRecord(c *gin.Context) {
 
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
+				"error": "unexpected server error",
 			})
 		}
 		return
