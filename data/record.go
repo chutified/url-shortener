@@ -18,10 +18,10 @@ type Record struct {
 	ID        string       `json:"shortcut_id"`
 	Full      string       `json:"full_url"`
 	Short     string       `json:"short_url"`
-	Usage     int32        `json:"usage"`
-	CreatedAt time.Time    `json:"created_at"`
-	UpdatedAt time.Time    `json:"updated_at"`
-	DeletedAt sql.NullTime `json:"deleted_at"`
+	Usage     int32        `json:"-"`
+	CreatedAt time.Time    `json:"-"`
+	UpdatedAt time.Time    `json:"-"`
+	DeletedAt sql.NullTime `json:"-"`
 }
 
 var (
