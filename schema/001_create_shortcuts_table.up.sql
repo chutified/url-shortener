@@ -1,4 +1,3 @@
--- +migrate Up
 CREATE TABLE IF NOT EXISTS shortcuts (
   shortcut_id UUID NOT NULL UNIQUE,
   full_url TEXT NOT NULL,
