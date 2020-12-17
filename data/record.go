@@ -303,7 +303,14 @@ LIMIT 1;
 	}
 
 	// increment record's usage
-	s.incrementUsage(ctx, id)
+	if err = s.incrementUsage(ctx, id); err != nil {
+		return "", err
+	}
+
+	// log record's usage
+	if err = s.logUsage(ctx, id); err != nil {
+		return "", err
+	}
 
 	return full, nil
 }
