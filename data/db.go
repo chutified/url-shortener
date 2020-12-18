@@ -23,6 +23,7 @@ type Service interface {
 	GetRecordsLen(ctx context.Context) (int, error)
 	GetAllRecords(context.Context) ([]*ShortRecord, error)
 	RecordRecovery(context.Context, string) (string, error)
+	AdminAuth(string) error
 }
 
 // service implements Service interface.

@@ -18,17 +18,21 @@ func (h *handler) getHTTPHandler() http.Handler {
 	// V1
 	v1 := r.Group("/v1")
 	{
-		v1.GET("/url/short/:record_short", h.GetRecordByShort)
-		v1.GET("/url/id/:record_id", h.GetRecordByID)
 		v1.GET("/url/i/:record_short", h.GetRecordByShortPeek)
 
-		v1.GET("/urls/l", h.GetRecordsLen)
-		v1.GET("/urls", h.GetAllRecords)
+		authorized := v1.Group("/admin", h.AdminAuth())
+		{
+			authorized.GET("/url/short/:record_short", h.GetRecordByShort)
+			authorized.GET("/url/id/:record_id", h.GetRecordByID)
 
-		v1.POST("/url", h.AddRecord)
-		v1.PUT("/url/:record_id", h.UpdateRecord)
-		v1.DELETE("/url/:record_id", h.DeleteRecord)
-		v1.POST("/url/recovery/:record_id", h.RecordRecovery)
+			authorized.GET("/urls/l", h.GetRecordsLen)
+			authorized.GET("/urls", h.GetAllRecords)
+
+			authorized.POST("/url", h.AddRecord)
+			authorized.PUT("/url/:record_id", h.UpdateRecord)
+			authorized.DELETE("/url/:record_id", h.DeleteRecord)
+			authorized.POST("/url/recovery/:record_id", h.RecordRecovery)
+		}
 	}
 
 	return r
