@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"github.com/chutified/url-shortener/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,7 @@ func (h *handler) getHTTPHandler() http.Handler {
 	{
 		v1.GET("/url/i/:record_short", h.GetRecordByShortPeek)
 
-		authorized := v1.Group("/admin", h.AdminAuth())
+		authorized := v1.Group("/admin", middleware.AdminAuth(h.ds))
 		{
 			authorized.GET("/url/short/:record_short", h.GetRecordByShort)
 			authorized.GET("/url/id/:record_id", h.GetRecordByID)

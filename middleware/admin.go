@@ -1,4 +1,4 @@
-package controller
+package middleware
 
 import (
 	"net/http"
@@ -8,7 +8,7 @@ import (
 )
 
 // AdminAuth middleware checks if a request is authorized.
-func (h *handler) AdminAuth() gin.HandlerFunc {
+func AdminAuth(s data.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// load admin key
@@ -21,7 +21,7 @@ func (h *handler) AdminAuth() gin.HandlerFunc {
 		}
 
 		// validate admin key
-		err = h.ds.AdminAuth(key)
+		err = s.AdminAuth(key)
 		if err == data.ErrUnauthorized {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "invalid admin_key",
