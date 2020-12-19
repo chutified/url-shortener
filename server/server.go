@@ -1,4 +1,4 @@
-package controller
+package server
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/chutified/url-shortener/config"
+	"github.com/chutified/url-shortener/controller"
 )
 
 // Server manages the whole web service runtime.
@@ -19,7 +20,7 @@ type Server interface {
 
 // server implements Server interface.
 type server struct {
-	h          *handler
+	h          controller.Handler
 	srv        *http.Server
 	srvTimeOut time.Duration
 }
@@ -37,14 +38,14 @@ func (s *server) Set(ctx context.Context, cfg *config.Config) error {
 	s.srvTimeOut, _ = time.ParseDuration(cfg.SrvTimeOut)
 
 	// initialize handler
-	s.h = newHandler()
-	err := s.h.initDataService(ctx, cfg.DB)
+	s.h = controller.NewHandler()
+	err := s.h.InitDataService(ctx, cfg.DB)
 	if err != nil {
 		return fmt.Errorf("can not init handler's data service: %w", err)
 	}
 
 	// get handler with routings applied
-	r := s.h.getHTTPHandler()
+	r := s.h.GetHTTPHandler()
 
 	// create a server
 	s.srv = &http.Server{
@@ -87,7 +88,7 @@ func (s *server) Stop() error {
 func (s *server) Close() error {
 
 	// close handler
-	err := s.h.closeHandler()
+	err := s.h.CloseHandler()
 	if err != nil {
 		return fmt.Errorf("unsuccessfully closed handler: %w", err)
 	}

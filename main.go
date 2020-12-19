@@ -9,7 +9,7 @@ import (
 	"syscall"
 
 	"github.com/chutified/url-shortener/config"
-	"github.com/chutified/url-shortener/controller"
+	"github.com/chutified/url-shortener/server"
 	_ "github.com/lib/pq"
 )
 
@@ -23,7 +23,7 @@ func main() {
 
 	initCtx := context.Background()
 	// create server
-	srv := controller.NewServer()
+	srv := server.NewServer()
 	err = srv.Set(initCtx, cfg)
 	if err != nil {
 		log.Fatal(fmt.Errorf("failed to set server: %w", err))
