@@ -12,8 +12,8 @@ func AdminAuth(s data.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// load admin key
-		key, err := c.Cookie("admin_key")
-		if err == http.ErrNoCookie {
+		key := c.Query("admin_key")
+		if key == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "missing admin_key",
 			})
@@ -22,7 +22,7 @@ func AdminAuth(s data.Service) gin.HandlerFunc {
 		}
 
 		// validate admin key
-		err = s.AdminAuth(c, key)
+		err := s.AdminAuth(c, key)
 		if err == data.ErrUnauthorized {
 
 			c.JSON(http.StatusUnauthorized, gin.H{
