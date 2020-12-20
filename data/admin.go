@@ -8,8 +8,11 @@ import (
 	"strings"
 )
 
-// ErrUnauthorized is returned if provided admin_key is invalid.
-var ErrUnauthorized = errors.New("admin key validation failure")
+var (
+	salt = "@salt"
+	// ErrUnauthorized is returned if provided admin_key is invalid.
+	ErrUnauthorized = errors.New("admin key validation failure")
+)
 
 // AdminAuth validates given admin key. ErrUnauthorized is returned
 // if key is wrong. Otherwise unexpected internal server error is returned.
