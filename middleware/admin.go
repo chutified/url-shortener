@@ -21,7 +21,7 @@ func AdminAuth(s data.Service) gin.HandlerFunc {
 		}
 
 		// validate admin key
-		err = s.AdminAuth(key)
+		err = s.AdminAuth(c, key)
 		if err == data.ErrUnauthorized {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "invalid admin_key",
