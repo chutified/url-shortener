@@ -1,0 +1,5 @@
+ALTER TABLE admin_keys
+DROP CONSTRAINT fk_admin_id;
+
+ALTER TABLE admin_keys
+DROP COLUMN IF EXISTS admin_id CASCADE;
