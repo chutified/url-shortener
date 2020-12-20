@@ -31,6 +31,7 @@ WHERE
 func (s *service) logUsage(ctx context.Context, id string) error {
 
 	// store
+	//TODO insert foreign key
 	result, err := s.DB.ExecContext(ctx, `
 INSERT INTO
   usages (shortcut_id)
