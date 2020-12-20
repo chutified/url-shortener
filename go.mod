@@ -13,7 +13,7 @@ require (
 	github.com/lib/pq v1.8.0
 	github.com/yuin/goldmark v1.3.0 // indirect
 	golang.org/x/build v0.0.0-20201218060217-c7c6787ab33d // indirect
-	golang.org/x/crypto v0.0.0-20201217014255-9d1352758620 // indirect
+	golang.org/x/crypto v0.0.0-20201217014255-9d1352758620
 	golang.org/x/mod v0.4.0 // indirect
 	golang.org/x/net v0.0.0-20201216054612-986b41b23924 // indirect
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect

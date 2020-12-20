@@ -2,10 +2,11 @@ package data
 
 import (
 	"context"
-	"crypto/sha256"
 	"database/sql"
 	"errors"
 	"strings"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -16,18 +17,18 @@ var (
 
 // AdminAuth validates given admin key. ErrUnauthorized is returned
 // if key is wrong. Otherwise unexpected internal server error is returned.
-func (s *service) AdminAuth(ctx context.Context, key string) error {
+func (s *service) AdminAuth(ctx context.Context, wholeKey string) error {
 
-	key = strings.ToLower(key)
+	wholeKey = strings.ToLower(wholeKey) + salt
 
-	// seperate the key
-	splitKey := strings.Split(key, ".")
+	// seperate the wholeKey
+	splitKey := strings.Split(wholeKey, ".")
 	if len(splitKey) != 2 {
 		return ErrUnauthorized
 	}
 
 	prefix := splitKey[0]
-	hashKey := sha256.Sum256([]byte(splitKey[1]))
+	key := splitKey[1]
 
 	// query db
 	row := s.DB.QueryRowxContext(ctx, `
@@ -41,16 +42,18 @@ WHERE
 	`, prefix)
 
 	// scan row
-	var dbKey [32]byte
-	if err := row.Scan(&dbKey); err == sql.ErrNoRows {
+	var hashKey string
+	if err := row.Scan(&hashKey); err == sql.ErrNoRows {
 		return ErrUnauthorized
 	} else if err != nil {
 		return errors.New("unexpected internal server error")
 	}
 
 	// compare
-	if hashKey != dbKey {
+	if err := bcrypt.CompareHashAndPassword([]byte(hashKey), []byte(key)); err == bcrypt.ErrMismatchedHashAndPassword {
 		return ErrUnauthorized
+	} else if err != nil {
+		return errors.New("unexpected error")
 	}
 
 	return nil
