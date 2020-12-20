@@ -22,6 +22,10 @@ func (s *service) AdminAuth(ctx context.Context, key string) error {
 
 	// seperate the key
 	splitKey := strings.Split(key, ".")
+	if len(splitKey) != 2 {
+		return ErrUnauthorized
+	}
+
 	prefix := splitKey[0]
 	hashKey := sha256.Sum256([]byte(splitKey[1]))
 
