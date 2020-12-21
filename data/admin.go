@@ -10,10 +10,26 @@ import (
 )
 
 var (
-	salt = "@salt"
+	salt         = "@salt"
+	hashedPasswd = []byte("$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m")
 	// ErrUnauthorized is returned if provided admin_key is invalid.
 	ErrUnauthorized = errors.New("admin key validation failure")
 )
+
+// AuthenticateAdmin validates if the given passwd is correct.
+func (s *service) AuthenticateAdmin(ctx context.Context, passwd string) error {
+
+	// validate
+	err := bcrypt.CompareHashAndPassword(hashedPasswd, []byte(passwd+salt))
+	if err == bcrypt.ErrMismatchedHashAndPassword {
+		return ErrUnauthorized
+	} else if err != nil {
+		return errors.New("unexpected error when comparing hashed password")
+	}
+
+	// success
+	return nil
+}
 
 // AdminAuth validates given admin key. ErrUnauthorized is returned
 // if key is wrong. Otherwise unexpected internal server error is returned.
