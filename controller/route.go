@@ -34,6 +34,11 @@ func (h *handler) GetHTTPHandler() http.Handler {
 			authorized.DELETE("/url/:record_id", h.DeleteRecord)
 			authorized.POST("/url/recovery/:record_id", h.RecordRecovery)
 		}
+
+		login := v1.Group("/login", middleware.(h.ds))
+		{
+			login.POST("/gen", h.GenerateAdminKey)
+		}
 	}
 
 	return r

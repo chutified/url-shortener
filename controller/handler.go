@@ -21,6 +21,7 @@ type Handler interface {
 	GetRecordsLen(*gin.Context)
 	RecordRecovery(*gin.Context)
 	UpdateRecord(*gin.Context)
+	GenerateAdminKey(*gin.Context)
 	GetHTTPHandler() http.Handler
 	CloseHandler() error
 	InitDataService(context.Context, *config.DB) error
