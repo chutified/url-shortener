@@ -31,7 +31,7 @@ type handler struct {
 	ds data.Service
 }
 
-// newHandler returns an empty handler.
+// NewHandler returns an empty handler.
 func NewHandler() Handler {
 	return &handler{}
 }

@@ -50,6 +50,7 @@ func (s *service) AuthenticateAdmin(ctx context.Context, name string, passwd str
 	return nil
 }
 
+// GenerateAdminKey generates a new admin_key and add it into the database.
 func (s *service) GenerateAdminKey(ctx context.Context) (string, error) {
 
 	// set seed
