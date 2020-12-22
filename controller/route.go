@@ -35,7 +35,7 @@ func (h *handler) GetHTTPHandler() http.Handler {
 			authorized.POST("/url/recovery/:record_id", h.RecordRecovery)
 		}
 
-		login := v1.Group("/login", middleware.(h.ds))
+		login := v1.Group("/login", middleware.AdminLogin(h.ds))
 		{
 			login.POST("/gen", h.GenerateAdminKey)
 		}

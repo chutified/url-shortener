@@ -7,6 +7,52 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// AdminLogin validates login data.
+func AdminLogin(s data.Service) gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		// load login
+		username, ok := c.GetPostForm("username")
+		if !ok {
+
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "missing username field",
+			})
+			c.Abort()
+			return
+		}
+
+		password, ok := c.GetPostForm("password")
+		if !ok {
+
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "missing password field",
+			})
+			c.Abort()
+			return
+		}
+
+		// authentication
+		if err := s.AuthenticateAdmin(c, username, password); err == data.ErrUnauthorized {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": err.Error(),
+			})
+			c.Abort()
+			return
+
+		} else if err != nil {
+
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "unexpected server error",
+			})
+			c.Abort()
+			return
+		}
+
+		c.Next()
+	}
+}
+
 // AdminAuth middleware checks if a request is authorized.
 func AdminAuth(s data.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
