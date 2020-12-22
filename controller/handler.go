@@ -7,21 +7,10 @@ import (
 
 	"github.com/chutified/url-shortener/config"
 	"github.com/chutified/url-shortener/data"
-	"github.com/gin-gonic/gin"
 )
 
 // Handler is an handler interface of the controller
 type Handler interface {
-	AddRecord(*gin.Context)
-	DeleteRecord(*gin.Context)
-	GetAllRecords(*gin.Context)
-	GetRecordByID(*gin.Context)
-	GetRecordByShort(*gin.Context)
-	GetRecordByShortPeek(*gin.Context)
-	GetRecordsLen(*gin.Context)
-	RecordRecovery(*gin.Context)
-	UpdateRecord(*gin.Context)
-	GenerateAdminKey(*gin.Context)
 	GetHTTPHandler() http.Handler
 	CloseHandler() error
 	InitDataService(context.Context, *config.DB) error
