@@ -30,6 +30,8 @@ var (
 
 	// ErrUnauthorized is returned if provided admin_key is invalid.
 	ErrUnauthorized = errors.New("admin key validation failure")
+	// ErrPrefixNotFound is returned if admin_key with the given prefix can not found.
+	ErrPrefixNotFound = errors.New("admin_key's prefix was not found")
 )
 
 // AuthenticateAdmin validates if the given passwd is correct.
@@ -92,6 +94,30 @@ VALUES
 	}
 
 	return string(prefix) + "." + string(key), nil
+}
+
+// RevokeAdminKey revokes admin_key with the given unique prefix.
+func (s *service) RevokeAdminKey(ctx context.Context, prefix string) error {
+
+	// revoke
+	res, err := s.DB.ExecContext(ctx, `
+UPDATE
+  admin_keys
+SET
+  revoked_at = NOW()
+WHERE
+  prefix = $1;
+	`, prefix)
+	if err != nil {
+		return errors.New("unexpected internal server error")
+	}
+
+	// check result
+	if i, _ := res.RowsAffected(); i == 0 {
+		return ErrPrefixNotFound
+	}
+
+	return nil
 }
 
 // AdminAuth validates given admin key. ErrUnauthorized is returned
