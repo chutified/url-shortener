@@ -53,8 +53,8 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 	}
 }
 
-// AdminAuth middleware checks if a request is authorized.
-func AdminAuth(s data.Service) gin.HandlerFunc {
+// ValidateAdminKey middleware checks if a request is authorized.
+func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		// load admin key
@@ -68,7 +68,7 @@ func AdminAuth(s data.Service) gin.HandlerFunc {
 		}
 
 		// validate admin key
-		err := s.AdminAuth(c, key)
+		err := s.ValidateAdminKey(c, key)
 		if err == data.ErrUnauthorized {
 
 			c.JSON(http.StatusUnauthorized, gin.H{

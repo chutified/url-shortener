@@ -21,7 +21,7 @@ func (h *handler) GetHTTPHandler() http.Handler {
 	{
 		v1.GET("/url/i/:record_short", h.GetRecordByShortPeek)
 
-		authorized := v1.Group("/admin", middleware.AdminAuth(h.ds))
+		authorized := v1.Group("/admin", middleware.ValidateAdminKey(h.ds))
 		{
 			authorized.GET("/url/short/:record_short", h.GetRecordByShort)
 			authorized.GET("/url/id/:record_id", h.GetRecordByID)

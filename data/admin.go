@@ -54,9 +54,9 @@ func (s *service) AuthenticateAdmin(ctx context.Context, name string, passwd str
 	return nil
 }
 
-// AdminAuth validates given admin key. ErrUnauthorized is returned
+//ValidateAdminKey validates given admin key. ErrUnauthorized is returned
 // if key is wrong. Otherwise unexpected internal server error is returned.
-func (s *service) AdminAuth(ctx context.Context, wholeKey string) error {
+func (s *service) ValidateAdminKey(ctx context.Context, wholeKey string) error {
 
 	wholeKey += salt
 
