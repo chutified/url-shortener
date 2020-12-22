@@ -18,8 +18,9 @@ const (
 	prefixLen = 8
 	keyLen    = 40
 	digits    = "0123456789"
-	specials  = "?!@#$%^&*()[]{}<>_=-+|;:"
-	charSet   = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz" + digits + specials
+	specials  = "?!@#$%&()[]{}<>|"
+	alphabet  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz"
+	charSet   = alphabet + digits + specials
 )
 
 var (
@@ -60,17 +61,13 @@ func (s *service) GenerateAdminKey(ctx context.Context) (string, error) {
 	prefix := make([]byte, prefixLen)
 	key := make([]byte, keyLen)
 
-	// add digit
-	prefix[0] = digits[rand.Intn(len(digits))]
+	// add digit and special char
 	key[0] = digits[rand.Intn(len(digits))]
-
-	// add special char
-	prefix[1] = specials[rand.Intn(len(specials))]
 	key[1] = specials[rand.Intn(len(specials))]
 
 	// fill
-	for i := 2; i < prefixLen; i++ {
-		prefix[i] = charSet[rand.Intn(len(charSet))]
+	for i := 0; i < prefixLen; i++ {
+		prefix[i] = alphabet[rand.Intn(len(alphabet))]
 	}
 	for i := 2; i < keyLen; i++ {
 		key[i] = charSet[rand.Intn(len(charSet))]
