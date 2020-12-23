@@ -38,6 +38,7 @@ func (h *handler) GetHTTPHandler() http.Handler {
 		login := v1.Group("/login", middleware.AdminLogin(h.ds))
 		{
 			login.POST("/gen", h.GenerateAdminKey)
+			login.POST("/revoke", h.RevokeAdminKey)
 		}
 	}
 

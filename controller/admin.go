@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 
+	"github.com/chutified/url-shortener/data"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,5 +22,39 @@ func (h *handler) GenerateAdminKey(c *gin.Context) {
 	// success
 	c.JSON(http.StatusOK, gin.H{
 		"admin_key": key,
+	})
+}
+
+// RevokeAdminKey handles admin_key's cancelation.
+func (h *handler) RevokeAdminKey(c *gin.Context) {
+
+	// load prefix
+	prefix := c.Query("prefix")
+	if prefix == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "missing prefix query parameter",
+		})
+		return
+	}
+
+	// revoke
+	err := h.ds.RevokeAdminKey(c, prefix)
+	if err == data.ErrPrefixNotFound {
+
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+		return
+
+	} else if err != nil {
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "unexpected internal server error",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"revoked_prefix": prefix,
 	})
 }

@@ -150,7 +150,8 @@ UPDATE
 SET
   revoked_at = NOW()
 WHERE
-  prefix = $1;
+  prefix = $1
+  AND revoked_at IS NULL;
 	`, prefix)
 	if err != nil {
 		return errors.New("unexpected internal server error")
