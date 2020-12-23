@@ -26,6 +26,7 @@ type Service interface {
 	ValidateAdminKey(context.Context, string) error
 	AuthenticateAdmin(context.Context, string, string) error
 	GenerateAdminKey(context.Context) (string, error)
+	RevokeAdminKey(context.Context, string) error
 }
 
 // service implements Service interface.
