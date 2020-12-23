@@ -1,8 +1,7 @@
 CREATE OR REPLACE FUNCTION set_init_timestamp()
   RETURNS TRIGGER
   LANGUAGE PLPGSQL
-  AS
-$$
+  AS $$
 BEGIN
   NEW.created_at = NOW();
   NEW.updated_at = NOW();

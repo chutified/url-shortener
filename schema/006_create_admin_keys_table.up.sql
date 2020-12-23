@@ -10,8 +10,7 @@ CREATE TABLE IF NOT EXISTS admin_keys (
 CREATE OR REPLACE FUNCTION set_generated_at_admin_keys()
   RETURNS TRIGGER
   LANGUAGE PLPGSQL
-  AS
-$$
+  AS $$
 BEGIN
   NEW.generated_at = NOW();
   NEW.revoked_at = NULL;
@@ -19,8 +18,8 @@ RETURN NEW;
 END;
 $$;
 
-CREATE TRIGGER set_generated_at_admin_keys_trigger BEFORE
-INSERT
+CREATE TRIGGER set_generated_at_admin_keys_trigger
+BEFORE INSERT
   ON admin_keys
   FOR EACH ROW
     EXECUTE PROCEDURE set_generated_at_admin_keys();

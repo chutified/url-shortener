@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION set_logged_at_timestamp()
   RETURNS TRIGGER
   LANGUAGE PLPGSQL
-AS $$
+  AS $$
 BEGIN
   NEW.logged_at = NOW();
   RETURN NEW;
