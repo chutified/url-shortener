@@ -9,6 +9,9 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+// ErrUnexpectedError is returned if something internal went wrong.
+var ErrUnexpectedError = errors.New("unexpected internal server error")
+
 // Service is the controller of the data services.
 // Only DataService stores the database connection.
 type Service interface {
