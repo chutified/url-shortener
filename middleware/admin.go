@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/chutified/url-shortener/data"
@@ -16,7 +17,7 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 		if !ok {
 
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "missing username field",
+				"error": "missing username form field",
 			})
 			c.Abort()
 			return
@@ -26,7 +27,7 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 		if !ok {
 
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "missing password field",
+				"error": "missing password form field",
 			})
 			c.Abort()
 			return
@@ -35,15 +36,16 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 		// authentication
 		if err := s.AuthenticateAdmin(c, username, password); err == data.ErrUnauthorized {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": err.Error(),
+				"error": fmt.Errorf("authentication error: %w", err),
 			})
 			c.Abort()
 			return
 
 		} else if err != nil {
 
+			// TODO log verbose error
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "unexpected server error",
+				"error": data.ErrUnexpectedError,
 			})
 			c.Abort()
 			return
@@ -61,7 +63,7 @@ func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 		key := c.Query("admin_key")
 		if key == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": "missing admin_key",
+				"error": "missing admin_key query paramater",
 			})
 			c.Abort()
 			return
@@ -72,15 +74,16 @@ func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 		if err == data.ErrUnauthorized {
 
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": "invalid admin_key",
+				"error": "invalid admin_key query parameter",
 			})
 			c.Abort()
 			return
 
 		} else if err != nil {
 
+			// TODO log verbose error
 			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "unexpected server error",
+				"error": data.ErrUnexpectedError,
 			})
 			c.Abort()
 			return

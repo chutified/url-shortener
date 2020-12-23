@@ -18,7 +18,7 @@ func main() {
 	// get configuration
 	cfg, err := config.GetConfig("settings.json")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(fmt.Errorf("failed to load config file: %w", err))
 	}
 
 	initCtx := context.Background()

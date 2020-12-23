@@ -49,7 +49,7 @@ func (h *handler) CloseHandler() error {
 	// close data service connection
 	err := h.ds.StopDB()
 	if err != nil {
-		return fmt.Errorf("failed to close data service connection")
+		return fmt.Errorf("failed to close data service connection: %w", err)
 	}
 
 	return nil

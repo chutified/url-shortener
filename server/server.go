@@ -65,7 +65,7 @@ func (s *server) Run() error {
 	// run server
 	err := s.srv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
-		return fmt.Errorf("unexpected server error: %w", err)
+		return fmt.Errorf("server can not be launched: %w", err)
 	}
 
 	return nil
@@ -90,7 +90,7 @@ func (s *server) Close() error {
 	// close handler
 	err := s.h.CloseHandler()
 	if err != nil {
-		return fmt.Errorf("unsuccessfully closed handler: %w", err)
+		return fmt.Errorf("unsuccessful handler's closure: %w", err)
 	}
 
 	return nil
