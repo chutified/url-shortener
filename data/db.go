@@ -59,7 +59,7 @@ func (s *service) InitDB(ctx context.Context, dbCfg *config.DB) error {
 	// test connection
 	err = s.DB.Ping()
 	if err != nil {
-		return errors.New("db conn verification failed")
+		return fmt.Errorf("failed to make a database connection: %w", err)
 	}
 
 	return nil
@@ -71,7 +71,7 @@ func (s *service) StopDB() error {
 	// close db conection
 	err := s.DB.Close()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to successfully close database connection: %w", err)
 	}
 
 	return nil

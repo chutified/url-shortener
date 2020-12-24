@@ -1,6 +1,9 @@
 package data
 
-import "context"
+import (
+	"context"
+	"fmt"
+)
 
 // incrementUsage increments usage column at record's with the given id.
 func (s *service) incrementUsage(ctx context.Context, id string) error {
@@ -16,7 +19,7 @@ WHERE
   AND deleted_at IS NULL;
 	`, id)
 	if err != nil {
-		return err
+		return fmt.Errorf("update failure: %w", err)
 	}
 
 	// check changes
@@ -38,7 +41,7 @@ VALUES
   ($1);
 	`, id)
 	if err != nil {
-		return err
+		return fmt.Errorf("insert failure: %w", err)
 	}
 
 	// check changes

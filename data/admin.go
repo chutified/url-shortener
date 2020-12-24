@@ -47,7 +47,7 @@ func (s *service) AuthenticateAdmin(ctx context.Context, name string, passwd str
 	if err == bcrypt.ErrMismatchedHashAndPassword {
 		return ErrUnauthorized
 	} else if err != nil {
-		return errors.New("unexpected error when comparing hashed password")
+		return fmt.Errorf("unexpected validation failure: %w", err)
 	}
 
 	// success
@@ -85,14 +85,14 @@ WHERE
 	if err := row.Scan(&hashKey); err == sql.ErrNoRows {
 		return ErrUnauthorized
 	} else if err != nil {
-		return errors.New("unexpected internal server error")
+		return fmt.Errorf("retrived sql row scan error: %w", err)
 	}
 
 	// compare
 	if err := bcrypt.CompareHashAndPassword([]byte(hashKey), []byte(key)); err == bcrypt.ErrMismatchedHashAndPassword {
 		return ErrUnauthorized
 	} else if err != nil {
-		return errors.New("unexpected error")
+		return fmt.Errorf("")
 	}
 
 	return nil
@@ -111,7 +111,7 @@ func (s *service) GenerateAdminKey(ctx context.Context) (string, error) {
 		// hash key
 		hashKey, err := bcrypt.GenerateFromPassword(append(key, []byte(salt)...), bcrypt.DefaultCost)
 		if err != nil {
-			return "", errors.New("unable to hash generated password")
+			return "", fmt.Errorf("unable to hash generated password: %w", err)
 		}
 
 		// insert
@@ -131,7 +131,7 @@ VALUES
 				}
 			}
 
-			return "", fmt.Errorf("could not execute sql insert: %w", err)
+			return "", fmt.Errorf("insert failure: %w", err)
 		}
 
 		break
@@ -154,7 +154,7 @@ WHERE
   AND revoked_at IS NULL;
 	`, prefix)
 	if err != nil {
-		return errors.New("unexpected internal server error")
+		return fmt.Errorf("unexpected validation failure: %w", err)
 	}
 
 	// check result
