@@ -63,7 +63,7 @@ func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 		key := c.Query("admin_key")
 		if key == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": "missing admin_key query paramater",
+				"error": "missing admin_key query parameter",
 			})
 			c.Abort()
 			return
