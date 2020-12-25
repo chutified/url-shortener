@@ -36,7 +36,7 @@ func (h *handler) AddRecord(c *gin.Context) {
 			})
 
 		default:
-			// TODO log verbose error
+			h.ds.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
 			})
@@ -86,7 +86,7 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 
 		// server error
 		default:
-			// TODO log verbose error
+			h.ds.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
 			})
@@ -120,7 +120,7 @@ func (h *handler) DeleteRecord(c *gin.Context) {
 			})
 
 		default:
-			// TODO log verbose error
+			h.ds.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
 			})
@@ -156,7 +156,7 @@ func (h *handler) GetRecordByID(c *gin.Context) {
 			})
 
 		default:
-			// TODO log verbose error
+			h.ds.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
 			})
@@ -185,7 +185,7 @@ func (h *handler) GetRecordByShort(c *gin.Context) {
 			})
 
 		default:
-			// TODO log verbose error
+			h.ds.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
 			})
@@ -214,7 +214,7 @@ func (h *handler) GetRecordByShortPeek(c *gin.Context) {
 			})
 
 		default:
-			// TODO log verbose error
+			h.ds.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
 			})
@@ -234,7 +234,7 @@ func (h *handler) GetRecordsLen(c *gin.Context) {
 	// get length
 	l, err := h.ds.GetRecordsLen(c)
 	if err != nil {
-		// TODO log verbose error
+		h.ds.LogError(c, err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
 		})
@@ -252,7 +252,7 @@ func (h *handler) GetAllRecords(c *gin.Context) {
 	// get records
 	rs, err := h.ds.GetAllRecords(c)
 	if err != nil {
-		// TODO log verbose error
+		h.ds.LogError(c, err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
 		})

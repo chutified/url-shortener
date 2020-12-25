@@ -13,7 +13,7 @@ func (h *handler) GenerateAdminKey(c *gin.Context) {
 	// generate a new key
 	key, err := h.ds.GenerateAdminKey(c)
 	if err != nil {
-		// TODO log verbose error
+		h.ds.LogError(c, err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
 		})
@@ -48,8 +48,7 @@ func (h *handler) RevokeAdminKey(c *gin.Context) {
 		return
 
 	} else if err != nil {
-
-		// TODO log verbose error
+		h.ds.LogError(c, err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
 		})

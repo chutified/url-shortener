@@ -43,7 +43,7 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 
 		} else if err != nil {
 
-			// TODO log verbose error
+			s.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
 			})
@@ -81,7 +81,7 @@ func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 
 		} else if err != nil {
 
-			// TODO log verbose error
+			s.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
 			})
