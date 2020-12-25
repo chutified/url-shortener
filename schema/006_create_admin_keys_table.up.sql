@@ -7,19 +7,16 @@ CREATE TABLE IF NOT EXISTS admin_keys (
   PRIMARY KEY (key_id)
 );
 
-CREATE OR REPLACE FUNCTION set_generated_at_admin_keys()
-  RETURNS TRIGGER
-  LANGUAGE PLPGSQL
-  AS $$
+CREATE OR REPLACE FUNCTION set_generated_at_admin_keys ()
+  RETURNS TRIGGER LANGUAGE PLPGSQL AS $$
 BEGIN
   NEW.generated_at = NOW();
   NEW.revoked_at = NULL;
-RETURN NEW;
+  RETURN NEW;
 END;
 $$;
 
 CREATE TRIGGER set_generated_at_admin_keys_trigger
-BEFORE INSERT
-  ON admin_keys
+  BEFORE INSERT ON admin_keys
   FOR EACH ROW
-    EXECUTE PROCEDURE set_generated_at_admin_keys();
+    EXECUTE PROCEDURE set_generated_at_admin_keys ();

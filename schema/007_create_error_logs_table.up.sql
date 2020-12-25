@@ -5,10 +5,8 @@ CREATE TABLE IF NOT EXISTS error_logs (
   PRIMARY KEY (err_id)
 );
 
-CREATE OR REPLACE FUNCTION set_logged_at()
-  RETURNS TRIGGER
-  LANGUAGE plpgsql
-  AS $$
+CREATE OR REPLACE FUNCTION set_logged_at ()
+  RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
   NEW.logged_at = NOW();
   RETURN NEW;
@@ -16,7 +14,5 @@ END;
 $$;
 
 CREATE TRIGGER set_logged_at_trigger
-BEFORE INSERT
-  ON error_logs
-  FOR EACH ROW
-    EXECUTE PROCEDURE set_logged_at();
+  BEFORE INSERT ON error_logs
+  FOR EACH ROW EXECUTE PROCEDURE set_logged_at ();
