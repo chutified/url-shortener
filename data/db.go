@@ -27,7 +27,7 @@ type Service interface {
 	GetAllRecords(context.Context) ([]*ShortRecord, error)
 	RecordRecovery(context.Context, string) (string, error)
 	ValidateAdminKey(context.Context, string) error
-	AuthenticateAdmin(context.Context, string, string) error
+	AuthenticateAdmin(string, string) error
 	GenerateAdminKey(context.Context) (string, error)
 	RevokeAdminKey(context.Context, string) error
 	LogError(context.Context, error)

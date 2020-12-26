@@ -34,7 +34,7 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 		}
 
 		// authentication
-		if err := s.AuthenticateAdmin(c, username, password); err == data.ErrUnauthorized {
+		if err := s.AuthenticateAdmin(username, password); err == data.ErrUnauthorized {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": fmt.Errorf("authentication error: %w", err),
 			})
