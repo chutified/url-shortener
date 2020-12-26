@@ -40,7 +40,7 @@ var (
 	// ErrShortNotFound is returned when record's Short can not be found.
 	ErrShortNotFound = errors.New("given 'short' value does not exist")
 	// ErrUnavailableShort is returned when the new record has a Short which already exists.
-	ErrUnavailableShort = errors.New("'short' value of the given record is already in use")
+	ErrUnavailableShort = errors.New("'short' value of the given record was already used")
 	// ErrInvalidID is returned when an ID with invalid formats provided.
 	ErrInvalidID = errors.New("given id has invalid format")
 	// ErrNotDeleted is returned when the record is not deleted.
