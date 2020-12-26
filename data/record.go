@@ -59,7 +59,7 @@ func (s *service) AddRecord(ctx context.Context, r *Record) (*ShortRecord, error
 	}
 
 	// create a record
-	newr := &ShortRecord{
+	newRec := &ShortRecord{
 		ID:    uuid.New().String(),
 		Full:  strings.ToLower(r.Full),
 		Short: strings.ToLower(r.Short),
@@ -71,7 +71,7 @@ INSERT INTO
   shortcuts (shortcut_id, full_url, short_url)
 VALUES
   ($1, $2, $3);
-  `, newr.ID, newr.Full, newr.Short)
+  `, newRec.ID, newRec.Full, newRec.Short)
 	if err != nil {
 
 		// postgres errors
@@ -85,7 +85,7 @@ VALUES
 		return nil, fmt.Errorf("could not execute sql insert: %w", err)
 	}
 
-	return newr, nil
+	return newRec, nil
 }
 
 // UpdateRecord updates a record with the given id.
@@ -96,7 +96,7 @@ VALUES
 func (s *service) UpdateRecord(ctx context.Context, id string, r *ShortRecord) (*ShortRecord, error) {
 
 	// create record
-	updr := &ShortRecord{
+	updRecord := &ShortRecord{
 		ID:    strings.ToLower(id),
 		Full:  strings.ToLower(r.Full),
 		Short: strings.ToLower(r.Short),
@@ -112,7 +112,7 @@ SET
 WHERE
   shortcut_id = $1
   AND deleted_at IS NULL;
-	`, updr.ID, newNullString(updr.Full), newNullString(updr.Short))
+	`, updRecord.ID, newNullString(updRecord.Full), newNullString(updRecord.Short))
 	if err != nil {
 
 		// postgres errors
@@ -137,7 +137,7 @@ WHERE
 		return nil, ErrIDNotFound
 	}
 
-	return updr, nil
+	return updRecord, nil
 }
 
 // DeleteRecord softly removes a record with the given id.
@@ -354,7 +354,11 @@ WHERE
 ORDER BY
   usage;
 	`)
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			s.LogError(ctx, err)
+		}
+	}()
 
 	// scan each record
 	var records []*ShortRecord
