@@ -13,6 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//goland:noinspection SpellCheckingInspection
 const (
 	salt = "@salt"
 
@@ -22,12 +23,12 @@ const (
 	digits    = "0123456789"
 	alphabet  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz"
 	charSet   = alphabet + digits
+
+	hashedPasswd = "$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m"
+	username     = "urlshorteneradmin"
 )
 
 var (
-	hashedPasswd = []byte("$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m")
-	username     = "urlshorteneradmin"
-
 	// ErrUnauthorized is returned if provided admin_key is invalid.
 	ErrUnauthorized = errors.New("admin key validation failure")
 	// ErrPrefixNotFound is returned if admin_key with the given prefix can not found.
@@ -35,7 +36,7 @@ var (
 )
 
 // AuthenticateAdmin validates if the given passwd is correct.
-func (s *service) AuthenticateAdmin(ctx context.Context, name string, passwd string) error {
+func (s *service) AuthenticateAdmin(name string, passwd string) error {
 
 	// check username
 	if name != username {
@@ -43,7 +44,7 @@ func (s *service) AuthenticateAdmin(ctx context.Context, name string, passwd str
 	}
 
 	// validate
-	err := bcrypt.CompareHashAndPassword(hashedPasswd, []byte(passwd+salt))
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPasswd), []byte(passwd+salt))
 	if err == bcrypt.ErrMismatchedHashAndPassword {
 		return ErrUnauthorized
 	} else if err != nil {
