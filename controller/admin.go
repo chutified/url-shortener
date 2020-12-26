@@ -39,15 +39,15 @@ func (h *handler) RevokeAdminKey(c *gin.Context) {
 	}
 
 	// revoke
-	err := h.ds.RevokeAdminKey(c, prefix)
-	if err == data.ErrPrefixNotFound {
+	if err := h.ds.RevokeAdminKey(c, prefix); err != nil {
+		if err == data.ErrPrefixNotFound {
 
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": err.Error(),
-		})
-		return
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
 
-	} else if err != nil {
 		h.ds.LogError(c, err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
