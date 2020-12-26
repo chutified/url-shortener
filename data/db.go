@@ -38,12 +38,12 @@ type service struct {
 	DB *sqlx.DB
 }
 
-// NewService is the contructor of the Service controller.
+// NewService is the constructor of the Service controller.
 func NewService() Service {
 	return &service{}
 }
 
-// InitDB intiliazes the database connection for the data server.
+// InitDB initializes the database connection for the data server.
 // Valid credentials must be provided to connect to the database.
 func (s *service) InitDB(ctx context.Context, dbCfg *config.DB) error {
 
@@ -69,7 +69,7 @@ func (s *service) InitDB(ctx context.Context, dbCfg *config.DB) error {
 // StopDB closes database connection of the service.
 func (s *service) StopDB() error {
 
-	// close db conection
+	// close db connection
 	err := s.DB.Close()
 	if err != nil {
 		return fmt.Errorf("failed to successfully close database connection: %w", err)

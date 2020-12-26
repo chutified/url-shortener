@@ -13,7 +13,7 @@ import (
 )
 
 // Record is the unit of each shorten URL.  Record stores the time of its creation,
-// update and deletion. All Short atributes must be unique. Full can have duplicates.
+// update and deletion. All Short attributes must be unique. Full can have duplicates.
 type Record struct {
 	ID        string       `json:"shortcut_id"`
 	Full      string       `json:"full_url"`
@@ -39,11 +39,9 @@ var (
 	ErrIDNotFound = errors.New("given 'id' value does not exist")
 	// ErrShortNotFound is returned when record's Short can not be found.
 	ErrShortNotFound = errors.New("given 'short' value does not exist")
-	// ErrFullNotFound is returned when record's Full can not be found.
-	ErrFullNotFound = errors.New("given 'full' value does not exist")
 	// ErrUnavailableShort is returned when the new record has a Short which already exists.
 	ErrUnavailableShort = errors.New("'short' value of the given record is already in use")
-	// ErrInvalidID is returned when an ID with invalid formatis provided.
+	// ErrInvalidID is returned when an ID with invalid formats provided.
 	ErrInvalidID = errors.New("given id has invalid format")
 	// ErrNotDeleted is returned when the record is not deleted.
 	ErrNotDeleted = errors.New("record with the given id is either not deleted or does not exist")
@@ -162,7 +160,7 @@ WHERE
 	`, id)
 	if err != nil {
 
-		// postres errors
+		// postgres errors
 		if err, ok := err.(*pq.Error); ok {
 			switch err.Code {
 
@@ -235,7 +233,7 @@ LIMIT 1;
 }
 
 // GetRecordByShort is an alternative of GetRecordByID which uses
-// short atribute for querying instead of an ID.
+// short attribute for querying instead of an ID.
 func (s *service) GetRecordByShort(ctx context.Context, short string) (*Record, error) {
 
 	// short to lowercase
@@ -262,7 +260,7 @@ LIMIT 1;
 	var r Record
 	err := row.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt)
 	if err == sql.ErrNoRows {
-		// nothing resturned
+		// nothing returned
 		return nil, ErrShortNotFound
 
 	} else if err != nil {
@@ -316,7 +314,7 @@ LIMIT 1;
 }
 
 // GetRecordsLen returns the number of active urls.
-// Only unexpected errors can occurre.
+// Only unexpected errors can occurs.
 func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
 
 	// query database
@@ -381,7 +379,7 @@ ORDER BY
 	return records, nil
 }
 
-// RecordRecovery recovers the solftly deleted records.
+// RecordRecovery recovers the softly deleted records.
 func (s *service) RecordRecovery(ctx context.Context, id string) (string, error) {
 
 	// id to lowercase

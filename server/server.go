@@ -31,7 +31,7 @@ func NewServer() Server {
 }
 
 // Set prepares server to run. Set creates under the hood a new database connection
-// and server structure based on the given configuration + manage routings and endpoints.
+// and server structure based on the given configuration + manage routing and endpoints.
 func (s *server) Set(ctx context.Context, cfg *config.Config) error {
 
 	// set timeout
@@ -44,7 +44,7 @@ func (s *server) Set(ctx context.Context, cfg *config.Config) error {
 		return fmt.Errorf("can not init handler's data service: %w", err)
 	}
 
-	// get handler with routings applied
+	// get handler with routing applied
 	r := s.h.GetHTTPHandler()
 
 	// create a server

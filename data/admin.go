@@ -60,7 +60,7 @@ func (s *service) ValidateAdminKey(ctx context.Context, wholeKey string) error {
 
 	wholeKey += salt
 
-	// seperate the wholeKey
+	// separate the wholeKey
 	splitKey := strings.Split(wholeKey, ".")
 	if len(splitKey) != 2 {
 		return ErrUnauthorized

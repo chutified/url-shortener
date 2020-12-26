@@ -26,7 +26,7 @@ func (h *handler) GenerateAdminKey(c *gin.Context) {
 	})
 }
 
-// RevokeAdminKey handles admin_key's cancelation.
+// RevokeAdminKey handles admin_key's cancellation.
 func (h *handler) RevokeAdminKey(c *gin.Context) {
 
 	// load prefix
