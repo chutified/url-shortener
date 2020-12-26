@@ -20,29 +20,10 @@ type Config struct {
 // Configuration file must be JSON file type (.json).
 func GetConfig(file string) (*Config, error) {
 
-	// open config file
-	f, err := os.Open(file)
+	// get config file
+	cfg, err := getConfig(file)
 	if err != nil {
-		return nil, fmt.Errorf("can not open config file: %w", err)
-	}
-	defer f.Close()
-
-	// validate file extension
-	l := len(file)
-	if file[l-5:l] != ".json" {
-		return nil, fmt.Errorf("invalid config file type: expected '.json' extension")
-	}
-
-	// decode json
-	var cfg Config
-	err = json.NewDecoder(f).Decode(&cfg)
-	if err != nil {
-		return nil, fmt.Errorf("unable to decode config file: %w", err)
-	}
-
-	// validate config's driver
-	if cfg.DB.Driver != "postgres" {
-		return nil, errors.New("not supported sql database driver")
+		return nil, fmt.Errorf("could not correctly load config file: %w", err)
 	}
 
 	// check for database connection environment variable
@@ -52,16 +33,47 @@ func GetConfig(file string) (*Config, error) {
 	}
 	cfg.DB.DBConn = dbconn
 
-	// validate server timeout
-	_, err = time.ParseDuration(cfg.SrvTimeOut)
-	if err != nil {
-		return nil, errors.New("invalid server timeout duration: " + cfg.SrvTimeOut)
-	}
-
 	return &cfg, nil
 }
 
 // Addr returns a chosen address for the server.
 func (cfg *Config) Addr() string {
 	return fmt.Sprintf(":%d", cfg.SrvPort)
+}
+
+// getConfig load config file, validate its extension and decode it into a Config struct.
+func getConfig(file string) (Config, error) {
+
+	// open config file
+	f, err := os.Open(file)
+	if err != nil {
+		return Config{}, fmt.Errorf("can not open config file: %w", err)
+	}
+	defer f.Close()
+
+	// validate file extension
+	l := len(file)
+	if file[l-5:l] != ".json" {
+		return Config{}, fmt.Errorf("invalid config file type: expected '.json' extension")
+	}
+
+	// decode json
+	var cfg Config
+	err = json.NewDecoder(f).Decode(&cfg)
+	if err != nil {
+		return Config{}, fmt.Errorf("unable to decode config file: %w", err)
+	}
+
+	// validate config's driver
+	if cfg.DB.Driver != "postgres" {
+		return Config{}, errors.New("not supported sql database driver")
+	}
+
+	// validate server timeout
+	_, err = time.ParseDuration(cfg.SrvTimeOut)
+	if err != nil {
+		return Config{}, errors.New("invalid server timeout duration: " + cfg.SrvTimeOut)
+	}
+
+	return cfg, nil
 }
