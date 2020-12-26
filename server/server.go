@@ -37,24 +37,13 @@ func (s *server) Set(ctx context.Context, cfg *config.Config) error {
 	// set timeout
 	s.srvTimeOut, _ = time.ParseDuration(cfg.SrvTimeOut)
 
-	// initialize handler
-	s.h = controller.NewHandler()
-	err := s.h.InitDataService(ctx, cfg.DB)
-	if err != nil {
-		return fmt.Errorf("can not init handler's data service: %w", err)
+	// set handler
+	if err := s.setHandler(ctx, cfg); err != nil {
+		return fmt.Errorf("failed too set handler: %w", err)
 	}
 
-	// get handler with routing applied
-	r := s.h.GetHTTPHandler()
-
-	// create a server
-	s.srv = &http.Server{
-		Addr:              cfg.Addr(),
-		Handler:           r,
-		ReadTimeout:       500 * time.Millisecond,
-		ReadHeaderTimeout: 300 * time.Millisecond,
-		WriteTimeout:      500 * time.Millisecond,
-	}
+	// set server
+	s.setServer(cfg)
 
 	return nil
 }
@@ -94,4 +83,32 @@ func (s *server) Close() error {
 	}
 
 	return nil
+}
+
+// setHandler initializes handler's data service and sets it for the server.
+func (s *server) setHandler(ctx context.Context, cfg *config.Config) error {
+
+	// initialize handler
+	s.h = controller.NewHandler()
+	err := s.h.InitDataService(ctx, cfg.DB)
+	if err != nil {
+		return fmt.Errorf("can not init handler's data service: %w", err)
+	}
+	return nil
+}
+
+// setServer constructs a server.
+func (s *server) setServer(cfg *config.Config) {
+
+	// get handler with routing applied
+	r := s.h.GetHTTPHandler()
+
+	// create a server
+	s.srv = &http.Server{
+		Addr:              cfg.Addr(),
+		Handler:           r,
+		ReadTimeout:       500 * time.Millisecond,
+		ReadHeaderTimeout: 300 * time.Millisecond,
+		WriteTimeout:      500 * time.Millisecond,
+	}
 }
