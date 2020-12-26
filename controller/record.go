@@ -11,8 +11,8 @@ import (
 func (h *handler) AddRecord(c *gin.Context) {
 
 	// bind record
-	var newr data.Record
-	err := c.ShouldBindJSON(&newr)
+	var newRecord data.Record
+	err := c.ShouldBindJSON(&newRecord)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -21,7 +21,7 @@ func (h *handler) AddRecord(c *gin.Context) {
 	}
 
 	// add record
-	r, err := h.ds.AddRecord(c, &newr)
+	r, err := h.ds.AddRecord(c, &newRecord)
 	if err != nil {
 		switch err {
 
@@ -55,8 +55,8 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 	id := c.Param("record_id")
 
 	// bind record
-	var newr data.ShortRecord
-	err := c.ShouldBindJSON(&newr)
+	var newRecord data.ShortRecord
+	err := c.ShouldBindJSON(&newRecord)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -65,7 +65,7 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 	}
 
 	// update record
-	r, err := h.ds.UpdateRecord(c, id, &newr)
+	r, err := h.ds.UpdateRecord(c, id, &newRecord)
 	if err != nil {
 		switch err {
 
