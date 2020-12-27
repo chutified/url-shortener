@@ -314,7 +314,7 @@ LIMIT 1;
 }
 
 // GetRecordsLen returns the number of active urls.
-// Only unexpected errors can occurs.
+// Only unexpected errors can occur.
 func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
 
 	// query database

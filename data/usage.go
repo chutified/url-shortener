@@ -30,7 +30,7 @@ WHERE
 	return nil
 }
 
-// logUsage logs the record with the given id into a usages table.
+// logUsage logs the record with the given id into an usages table.
 func (s *service) logUsage(ctx context.Context, id string) error {
 
 	// store

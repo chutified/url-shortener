@@ -27,11 +27,11 @@ func GetConfig(file string) (*Config, error) {
 	}
 
 	// check for database connection environment variable
-	dbconn := os.Getenv("URL_SHORTENER_DBCONN")
-	if dbconn == "" {
+	dbConn := os.Getenv("URL_SHORTENER_DBCONN")
+	if dbConn == "" {
 		return nil, errors.New("environment variable of url (URL_SHORTENER_DBCONN) for database connection is not set")
 	}
-	cfg.DB.DBConn = dbconn
+	cfg.DB.DBConn = dbConn
 
 	return &cfg, nil
 }

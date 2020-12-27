@@ -39,7 +39,7 @@ func (s *server) Set(ctx context.Context, cfg *config.Config) error {
 
 	// set handler
 	if err := s.setHandler(ctx, cfg); err != nil {
-		return fmt.Errorf("failed too set handler: %w", err)
+		return fmt.Errorf("failed to set handler: %w", err)
 	}
 
 	// set server
@@ -67,7 +67,7 @@ func (s *server) Stop() error {
 	ctx, cancel := context.WithTimeout(context.Background(), s.srvTimeOut)
 	defer cancel()
 	if err := s.srv.Shutdown(ctx); err != nil {
-		return fmt.Errorf("forced shutdown: %w", err)
+		return fmt.Errorf("a forced shutdown failed: %w", err)
 	}
 
 	return nil
@@ -79,7 +79,7 @@ func (s *server) Close() error {
 	// close handler
 	err := s.h.CloseHandler()
 	if err != nil {
-		return fmt.Errorf("unsuccessful handler's closure: %w", err)
+		return fmt.Errorf("an unsuccessful handler's closure: %w", err)
 	}
 
 	return nil

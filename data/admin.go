@@ -31,7 +31,8 @@ const (
 var (
 	// ErrUnauthorized is returned if provided admin_key is invalid.
 	ErrUnauthorized = errors.New("admin key validation failure")
-	// ErrPrefixNotFound is returned if admin_key with the given prefix can not found.
+	// ErrPrefixNotFound is returned if admin_key with the given prefix can not be found.
+
 	ErrPrefixNotFound = errors.New("admin_key's prefix was not found")
 )
 
@@ -55,8 +56,8 @@ func (s *service) AuthenticateAdmin(name string, passwd string) error {
 	return nil
 }
 
-//ValidateAdminKey validates given admin key. ErrUnauthorized is returned
-// if key is wrong. Otherwise unexpected internal server error is returned.
+// ValidateAdminKey validates given admin key. ErrUnauthorized is returned
+// if key is wrong. Otherwise, unexpected internal server error is returned.
 func (s *service) ValidateAdminKey(ctx context.Context, wholeKey string) error {
 
 	wholeKey += salt
@@ -166,7 +167,7 @@ WHERE
 	return nil
 }
 
-// genKey generates random prefix and key of an api key.
+// genKey generates a random prefix and key of an api key.
 func genKey() ([]byte, []byte) {
 
 	// set seed

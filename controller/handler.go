@@ -9,7 +9,7 @@ import (
 	"github.com/chutified/url-shortener/data"
 )
 
-// Handler is an handler interface of the controller
+// Handler is a handler interface of the controller
 type Handler interface {
 	GetHTTPHandler() http.Handler
 	CloseHandler() error
