@@ -8,6 +8,19 @@ import (
 	"time"
 )
 
+var (
+	// ErrFileNotFound is returned if file with given address can not be found.
+	ErrFileNotFound = errors.New("can not open config file")
+	// ErrInvalidFileFormat is returned if configuration file with unsupported file extension is provided.
+	ErrInvalidFileFormat = errors.New("invalid config file type: expected '.json' extension")
+	// ErrInvalidJSONFile is returned if config file's content is corrupted.
+	ErrInvalidJSONFile = errors.New("unable to correctly decode config file")
+	// ErrDriverNotSupported is returned if unsupported sql driver is provided.
+	ErrDriverNotSupported = errors.New("only postgres sql driver is supported")
+	// ErrInvalidTimeFormat is returned if given time can not be correctly formatted.
+	ErrInvalidTimeFormat = errors.New("invalid server timeout duration")
+)
+
 // Config represents the server's settings and the configuration of the database.
 type Config struct {
 	SrvPort    int    `json:"server_port"`
@@ -21,7 +34,7 @@ type Config struct {
 func GetConfig(file string) (*Config, error) {
 
 	// get config file
-	cfg, err := getConfig(file)
+	cfg, err := OpenConfig(file)
 	if err != nil {
 		return nil, fmt.Errorf("could not correctly load config file: %w", err)
 	}
@@ -41,38 +54,38 @@ func (cfg *Config) Addr() string {
 	return fmt.Sprintf(":%d", cfg.SrvPort)
 }
 
-// getConfig load config file, validate its extension and decode it into a Config struct.
-func getConfig(file string) (Config, error) {
+// OpenConfig load config file, validate its extension and decode it into a Config struct.
+func OpenConfig(file string) (Config, error) {
 
 	// open config file
 	f, err := os.Open(file)
 	if err != nil {
-		return Config{}, fmt.Errorf("can not open config file: %w", err)
+		return Config{}, ErrFileNotFound
 	}
 	defer f.Close()
 
 	// validate file extension
 	l := len(file)
 	if file[l-5:l] != ".json" {
-		return Config{}, fmt.Errorf("invalid config file type: expected '.json' extension")
+		return Config{}, ErrInvalidFileFormat
 	}
 
 	// decode json
 	var cfg Config
 	err = json.NewDecoder(f).Decode(&cfg)
 	if err != nil {
-		return Config{}, fmt.Errorf("unable to decode config file: %w", err)
+		return Config{}, ErrInvalidJSONFile
 	}
 
 	// validate config's driver
 	if cfg.DB.Driver != "postgres" {
-		return Config{}, errors.New("not supported sql database driver")
+		return Config{}, ErrDriverNotSupported
 	}
 
 	// validate server timeout
 	_, err = time.ParseDuration(cfg.SrvTimeOut)
 	if err != nil {
-		return Config{}, errors.New("invalid server timeout duration: " + cfg.SrvTimeOut)
+		return Config{}, ErrInvalidTimeFormat
 	}
 
 	return cfg, nil
