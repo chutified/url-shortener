@@ -1,0 +1,5 @@
+---
+server_post: 8080
+server_timeout: 10s
+db:
+  driver: postgres
