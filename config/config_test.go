@@ -1,11 +1,12 @@
 package config_test
 
 import (
-	"errors"
+	"fmt"
 	"reflect"
 	"testing"
 
 	"github.com/chutified/url-shortener/config"
+	"github.com/stretchr/testify/assert"
 )
 
 var testDir = "test-settings/"
@@ -68,9 +69,13 @@ func TestOpenConfig(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 
 			cfg, err := config.OpenConfig(testDir + tc.file)
-			if !errors.Is(err, tc.err) {
-				t.Errorf("expected %#v; got %#v", tc.err, err)
+			if tc.err != nil {
+				fmt.Println(err)
+				if assert.NotNil(t, err) {
+					assert.EqualError(t, err, tc.err.Error())
+				}
 			}
+			assert.Equal(t, tc.cfg, cfg)
 			if !reflect.DeepEqual(cfg, tc.cfg) {
 				t.Errorf("expected %#v; got %#v", tc.cfg, cfg)
 			}
@@ -84,14 +89,18 @@ func TestGetConfig(t *testing.T) {
 	tt := []struct {
 		name  string
 		file  string
-		cfg   *config.DB
+		cfg   *config.Config
 		noErr bool
 	}{
 		{
 			name: "ok",
 			file: "settings_1.json",
-			cfg: &config.DB{
-				Driver: "postgres",
+			cfg: &config.Config{
+				SrvPort:    8080,
+				SrvTimeOut: "10s",
+				DB: &config.DB{
+					Driver: "postgres",
+				},
 			},
 			noErr: true,
 		},
@@ -105,8 +114,21 @@ func TestGetConfig(t *testing.T) {
 			if (err == nil) != tc.noErr {
 				t.Errorf("expected no error; got %#v", err)
 			}
-			if !reflect.DeepEqual(cfg, tc.cfg) {
-				t.Errorf("expected %#v; got %#v", tc.cfg, cfg)
+
+			// check config values
+			if tc.cfg != nil {
+				if assert.NotNil(t, cfg) {
+
+					if assert.NotNil(t, cfg) {
+						assert.Equal(t, tc.cfg.SrvPort, cfg.SrvPort)
+					}
+					if tc.cfg.DB != nil {
+						if assert.NotNil(t, cfg.DB) {
+							assert.Equal(t, tc.cfg.DB.Driver, cfg.DB.Driver)
+						}
+					}
+					assert.Equal(t, tc.cfg.SrvTimeOut, cfg.SrvTimeOut)
+				}
 			}
 		})
 	}
