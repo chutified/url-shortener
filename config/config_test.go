@@ -11,63 +11,61 @@ import (
 
 var testDir = "test-settings/"
 
-func TestOpenConfig(t *testing.T) {
-
-	// define test table
-	tt := []struct {
-		name string
-		file string
-		cfg  config.Config
-		err  error
-	}{
-		{
-			name: "ok",
-			file: "settings_1.json",
-			cfg: config.Config{
-				SrvPort:    8080,
-				SrvTimeOut: "10s",
-				DB: &config.DB{
-					Driver: "postgres",
-				},
+// define test table
+var openConfigTests = []struct {
+	name string
+	file string
+	cfg  config.Config
+	err  error
+}{
+	{
+		name: "ok",
+		file: "settings_1.json",
+		cfg: config.Config{
+			SrvPort:    8080,
+			SrvTimeOut: "10s",
+			DB: &config.DB{
+				Driver: "postgres",
 			},
-			err: nil,
 		},
-		{
-			name: "invalid extension",
-			file: "settings_2.yaml",
-			cfg:  config.Config{},
-			err:  config.ErrInvalidFileFormat,
-		},
-		{
-			name: "corrupted content",
-			file: "settings_3.json",
-			cfg:  config.Config{},
-			err:  config.ErrInvalidJSONFile,
-		},
-		{
-			name: "invalid driver",
-			file: "settings_4.json",
-			cfg:  config.Config{},
-			err:  config.ErrDriverNotSupported,
-		},
-		{
-			name: "invalid time format",
-			file: "settings_5.json",
-			cfg:  config.Config{},
-			err:  config.ErrInvalidTimeFormat,
-		},
-		{
-			name: "file not found",
-			file: "settings_6.json",
-			cfg:  config.Config{},
-			err:  config.ErrFileNotFound,
-		},
-	}
+		err: nil,
+	},
+	{
+		name: "invalid extension",
+		file: "settings_2.yaml",
+		cfg:  config.Config{},
+		err:  config.ErrInvalidFileFormat,
+	},
+	{
+		name: "corrupted content",
+		file: "settings_3.json",
+		cfg:  config.Config{},
+		err:  config.ErrInvalidJSONFile,
+	},
+	{
+		name: "invalid driver",
+		file: "settings_4.json",
+		cfg:  config.Config{},
+		err:  config.ErrDriverNotSupported,
+	},
+	{
+		name: "invalid time format",
+		file: "settings_5.json",
+		cfg:  config.Config{},
+		err:  config.ErrInvalidTimeFormat,
+	},
+	{
+		name: "file not found",
+		file: "settings_6.json",
+		cfg:  config.Config{},
+		err:  config.ErrFileNotFound,
+	},
+}
 
+func TestOpenConfig(t *testing.T) {
 	// iterate over test cases
-	for _, tc := range tt {
+	for _, tc := range openConfigTests {
 		t.Run(tc.name, func(t *testing.T) {
-
 			cfg, err := config.OpenConfig(testDir + tc.file)
 			if tc.err != nil {
 				fmt.Println(err)
@@ -84,7 +82,6 @@ func TestOpenConfig(t *testing.T) {
 }
 
 func TestGetConfig(t *testing.T) {
-
 	// define test table
 	tt := []struct {
 		name  string
@@ -104,31 +101,38 @@ func TestGetConfig(t *testing.T) {
 			},
 			noErr: true,
 		},
+		{
+			name:  "fail to open file",
+			file:  "settings_2.json",
+			cfg:   nil,
+			noErr: false,
+		},
 	}
 
 	// iterate over test table
 	for _, tc := range tt {
 		t.Run(tc.name, func(t *testing.T) {
-
+			// test function
 			cfg, err := config.GetConfig(testDir + tc.file)
-			if (err == nil) != tc.noErr {
-				t.Errorf("expected no error; got %#v", err)
+			if tc.noErr {
+				assert.Nil(t, err)
+			} else {
+				assert.NotNil(t, err)
 			}
 
 			// check config values
-			if tc.cfg != nil {
+			if tc.cfg == nil {
+				assert.Nil(t, cfg)
+			} else if assert.NotNil(t, cfg) {
 				if assert.NotNil(t, cfg) {
-
-					if assert.NotNil(t, cfg) {
-						assert.Equal(t, tc.cfg.SrvPort, cfg.SrvPort)
-					}
-					if tc.cfg.DB != nil {
-						if assert.NotNil(t, cfg.DB) {
-							assert.Equal(t, tc.cfg.DB.Driver, cfg.DB.Driver)
-						}
-					}
-					assert.Equal(t, tc.cfg.SrvTimeOut, cfg.SrvTimeOut)
+					assert.Equal(t, tc.cfg.SrvPort, cfg.SrvPort)
 				}
+				if tc.cfg.DB != nil {
+					if assert.NotNil(t, cfg.DB) {
+						assert.Equal(t, tc.cfg.DB.Driver, cfg.DB.Driver)
+					}
+				}
+				assert.Equal(t, tc.cfg.SrvTimeOut, cfg.SrvTimeOut)
 			}
 		})
 	}

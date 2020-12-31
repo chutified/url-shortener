@@ -28,11 +28,10 @@ type Config struct {
 	DB         *DB    `json:"db"`
 }
 
-// GetConfig returns configuration based on the given file.
+// GtConfig returns configuration based on the given file.
 // The base of the file's path is at the root of the project (main.go file level).
 // Configuration file must be JSON file type (.json).
 func GetConfig(file string) (*Config, error) {
-
 	// get config file
 	cfg, err := OpenConfig(file)
 	if err != nil {
@@ -55,9 +54,7 @@ func (cfg *Config) Addr() string {
 }
 
 // OpenConfig load config file, validate its extension and decode it into a Config struct.
-func OpenConfig(file string) (Config, error) {
-
-	// open config file
+func OpenConfig(file string) (Config, error) { // open config file
 	f, err := os.Open(file)
 	if err != nil {
 		return Config{}, ErrFileNotFound
