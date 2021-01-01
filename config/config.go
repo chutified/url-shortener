@@ -50,7 +50,10 @@ func GetConfig(file string) (*Config, error) {
 
 // Addr returns a chosen address for the server.
 func (cfg *Config) Addr() string {
-	return fmt.Sprintf(":%d", cfg.SrvPort)
+	if cfg != nil {
+		return fmt.Sprintf(":%d", cfg.SrvPort)
+	}
+	return ""
 }
 
 // OpenConfig load config file, validate its extension and decode it into a Config struct.
