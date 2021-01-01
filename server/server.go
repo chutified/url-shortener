@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -32,9 +33,7 @@ func NewServer() Server {
 
 // Set prepares server to run. Set creates under the hood a new database connection
 // and server structure based on the given configuration + manage routing and endpoints.
-func (s *server) Set(ctx context.Context, cfg *config.Config) error {
-
-	// set timeout
+func (s *server) Set(ctx context.Context, cfg *config.Config) error { // set timeout
 	s.srvTimeOut, _ = time.ParseDuration(cfg.SrvTimeOut)
 
 	// set handler
@@ -50,10 +49,9 @@ func (s *server) Set(ctx context.Context, cfg *config.Config) error {
 
 // Run starts the server.
 func (s *server) Run() error {
-
 	// run server
 	err := s.srv.ListenAndServe()
-	if err != nil && err != http.ErrServerClosed {
+	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("server can not be launched: %w", err)
 	}
 
@@ -62,7 +60,6 @@ func (s *server) Run() error {
 
 // Stop stop the server.
 func (s *server) Stop() error {
-
 	// stop server
 	ctx, cancel := context.WithTimeout(context.Background(), s.srvTimeOut)
 	defer cancel()
@@ -74,9 +71,7 @@ func (s *server) Stop() error {
 }
 
 // Close closes all open connections and services.
-func (s *server) Close() error {
-
-	// close handler
+func (s *server) Close() error { // close handler
 	err := s.h.CloseHandler()
 	if err != nil {
 		return fmt.Errorf("an unsuccessful handler's closure: %w", err)
@@ -87,7 +82,6 @@ func (s *server) Close() error {
 
 // setHandler initializes handler's data service and sets it for the server.
 func (s *server) setHandler(ctx context.Context, cfg *config.Config) error {
-
 	// initialize handler
 	s.h = controller.NewHandler()
 	err := s.h.InitDataService(ctx, cfg.DB)
@@ -99,7 +93,6 @@ func (s *server) setHandler(ctx context.Context, cfg *config.Config) error {
 
 // setServer constructs a server.
 func (s *server) setServer(cfg *config.Config) {
-
 	// get handler with routing applied
 	r := s.h.GetHTTPHandler()
 

@@ -19,7 +19,6 @@ func newNullString(s string) sql.NullString {
 
 // LogError logs the error into error_logs table.
 func (s *service) LogError(ctx context.Context, logErr error) {
-
 	// insert
 	_, err := s.DB.ExecContext(ctx, `
 INSERT INTO

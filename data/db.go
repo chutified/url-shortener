@@ -46,7 +46,6 @@ func NewService() Service {
 // InitDB initializes the database connection for the data server.
 // Valid credentials must be provided to connect to the database.
 func (s *service) InitDB(ctx context.Context, dbCfg *config.DB) error {
-
 	// retrieve db connection string
 	driver, connStr := dbCfg.ConnStr()
 
@@ -68,7 +67,6 @@ func (s *service) InitDB(ctx context.Context, dbCfg *config.DB) error {
 
 // StopDB closes database connection of the service.
 func (s *service) StopDB() error {
-
 	// close db connection
 	err := s.DB.Close()
 	if err != nil {

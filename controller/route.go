@@ -8,9 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (h *handler) GetHTTPHandler() http.Handler {
-
-	// set router
+func (h *handler) GetHTTPHandler() http.Handler { // set router
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())

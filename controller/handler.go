@@ -28,7 +28,6 @@ func NewHandler() Handler {
 
 // InitDataService initializes handler's data service.
 func (h *handler) InitDataService(ctx context.Context, dbCfg *config.DB) error {
-
 	// create new data service
 	h.ds = data.NewService()
 
@@ -42,10 +41,8 @@ func (h *handler) InitDataService(ctx context.Context, dbCfg *config.DB) error {
 }
 
 // CloseHandler stops all active connections. closeHandler closes the data service.
-// This function should not be called often (meant to be used only when the server
-// is shutting down).
+// This function should not be called often (meant to be used only when the server is shutting down).
 func (h *handler) CloseHandler() error {
-
 	// close data service connection
 	err := h.ds.StopDB()
 	if err != nil {

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -11,11 +12,9 @@ import (
 // AdminLogin validates login data.
 func AdminLogin(s data.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		// load login
 		username, ok := c.GetPostForm("username")
 		if !ok {
-
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "missing username form field",
 			})
@@ -25,7 +24,6 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 
 		password, ok := c.GetPostForm("password")
 		if !ok {
-
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "missing password form field",
 			})
@@ -34,15 +32,13 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 		}
 
 		// authentication
-		if err := s.AuthenticateAdmin(username, password); err == data.ErrUnauthorized {
+		if err := s.AuthenticateAdmin(username, password); errors.Is(err, data.ErrUnauthorized) {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": fmt.Errorf("authentication error: %w", err),
 			})
 			c.Abort()
 			return
-
 		} else if err != nil {
-
 			s.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,
@@ -58,7 +54,6 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 // ValidateAdminKey middleware checks if a request is authorized.
 func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		// load admin key
 		key := c.Query("admin_key")
 		if key == "" {
@@ -71,16 +66,13 @@ func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 
 		// validate admin key
 		err := s.ValidateAdminKey(c, key)
-		if err == data.ErrUnauthorized {
-
+		if errors.Is(err, data.ErrUnauthorized) {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error": "invalid admin_key query parameter",
 			})
 			c.Abort()
 			return
-
 		} else if err != nil {
-
 			s.LogError(c, err)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": data.ErrUnexpectedError,

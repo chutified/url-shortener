@@ -52,7 +52,6 @@ var (
 // If any error occurs ErrInvalidRecord, ErrUnavailableShort or an unexpected
 // internal server error is returned.
 func (s *service) AddRecord(ctx context.Context, r *Record) (*ShortRecord, error) {
-
 	// validate values
 	if r.Full == "" || r.Short == "" {
 		return nil, ErrInvalidRecord
@@ -73,11 +72,11 @@ VALUES
   ($1, $2, $3);
   `, newRec.ID, newRec.Full, newRec.Short)
 	if err != nil {
-
 		// postgres errors
-		if err, ok := err.(*pq.Error); ok {
+		var pqErr *pq.Error
+		if errors.As(err, pqErr) {
 			// unique violation
-			if err.Code == "23505" {
+			if pqErr.Code == "23505" {
 				return nil, ErrUnavailableShort
 			}
 		}
@@ -94,7 +93,6 @@ VALUES
 // ErrUnavailableShort is returned. Any other errors
 // are server internal.
 func (s *service) UpdateRecord(ctx context.Context, id string, r *ShortRecord) (*ShortRecord, error) {
-
 	// create record
 	updRecord := &ShortRecord{
 		ID:    strings.ToLower(id),
@@ -114,11 +112,10 @@ WHERE
   AND deleted_at IS NULL;
 	`, updRecord.ID, newNullString(updRecord.Full), newNullString(updRecord.Short))
 	if err != nil {
-
 		// postgres errors
-		if err, ok := err.(*pq.Error); ok {
-			switch err.Code {
-
+		var pqErr *pq.Error
+		if errors.As(err, pqErr) {
+			switch pqErr.Code {
 			// unique violation
 			case "23505":
 				return nil, ErrUnavailableShort
@@ -144,7 +141,6 @@ WHERE
 // On success the function returns an ID of the deleted record
 // as a non-empty string.
 func (s *service) DeleteRecord(ctx context.Context, id string) (string, error) {
-
 	// id to lowercase
 	id = strings.ToLower(id)
 
@@ -159,13 +155,11 @@ WHERE
   AND deleted_at IS NULL;
 	`, id)
 	if err != nil {
-
 		// postgres errors
-		if err, ok := err.(*pq.Error); ok {
-			switch err.Code {
-
-			// invalid text representation
-			case "22P02":
+		// if err, ok := err.(*pq.Error); ok {
+		var pqErr *pq.Error
+		if errors.As(err, pqErr) {
+			if pqErr.Code == "22P02" {
 				return "", ErrInvalidID
 			}
 		}
@@ -186,7 +180,6 @@ WHERE
 // in case the given id does not follow standard UUID format, ErrInvalidID instead,
 // If any unexpected error occurs, unexpected server error is returned.
 func (s *service) GetRecordByID(ctx context.Context, id string) (*Record, error) {
-
 	// id to lowercase
 	id = strings.ToLower(id)
 
@@ -210,18 +203,14 @@ LIMIT 1;
 	// scan row into new record
 	var r Record
 	err := row.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt)
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		// nothing returned
 		return nil, ErrIDNotFound
-
 	} else if err != nil {
-
 		// postgres errors
-		if err, ok := err.(*pq.Error); ok {
-			switch err.Code {
-
-			// invalid text representation
-			case "22P02":
+		var pqErr *pq.Error
+		if errors.As(err, pqErr) {
+			if pqErr.Code == "22P02" {
 				return nil, ErrInvalidID
 			}
 		}
@@ -234,9 +223,7 @@ LIMIT 1;
 
 // GetRecordByShort is an alternative of GetRecordByID which uses
 // short attribute for querying instead of an ID.
-func (s *service) GetRecordByShort(ctx context.Context, short string) (*Record, error) {
-
-	// short to lowercase
+func (s *service) GetRecordByShort(ctx context.Context, short string) (*Record, error) { // short to lowercase
 	short = strings.ToLower(short)
 
 	// select the record
@@ -259,10 +246,9 @@ LIMIT 1;
 	// scan row into a new record
 	var r Record
 	err := row.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt)
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		// nothing returned
 		return nil, ErrShortNotFound
-
 	} else if err != nil {
 		return nil, fmt.Errorf("unexpected sql query error: %w", err)
 	}
@@ -272,9 +258,7 @@ LIMIT 1;
 
 // GetRecordByShort finds and returns the full version which corresponds
 // to the given short url.
-func (s *service) GetRecordByShortPeek(ctx context.Context, short string) (string, error) {
-
-	// short to lowercase
+func (s *service) GetRecordByShortPeek(ctx context.Context, short string) (string, error) { // short to lowercase
 	short = strings.ToLower(short)
 
 	// get full url
@@ -293,13 +277,11 @@ LIMIT 1;
 	// scan full url
 	var id, full string
 	err := row.Scan(&id, &full)
-	if err == sql.ErrNoRows {
+	if errors.Is(err, sql.ErrNoRows) {
 		return "", ErrShortNotFound
-
 	} else if err != nil {
 		return "", fmt.Errorf("unexpected sql query error: %w", err)
 	}
-
 	// increment record's usage
 	if err = s.incrementUsage(ctx, id); err != nil {
 		return "", err
@@ -316,7 +298,6 @@ LIMIT 1;
 // GetRecordsLen returns the number of active urls.
 // Only unexpected errors can occur.
 func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
-
 	// query database
 	row := s.DB.QueryRowContext(ctx, `
 SELECT
@@ -339,7 +320,6 @@ WHERE
 
 // GetAllRecords returns all active records in the database.
 func (s *service) GetAllRecords(ctx context.Context) ([]*ShortRecord, error) {
-
 	// retrieve all records
 	rows, err := s.DB.QueryContext(ctx, `
 SELECT
@@ -363,7 +343,6 @@ ORDER BY
 	// scan each record
 	var records []*ShortRecord
 	for rows.Next() {
-
 		// create new record
 		var r ShortRecord
 		err := rows.Scan(&r.ID, &r.Full, &r.Short, &r.Usage)
@@ -385,7 +364,6 @@ ORDER BY
 
 // RecordRecovery recovers the softly deleted records.
 func (s *service) RecordRecovery(ctx context.Context, id string) (string, error) {
-
 	// id to lowercase
 	id = strings.ToLower(id)
 
@@ -400,13 +378,10 @@ WHERE
   AND deleted_at IS NOT NULL;
 	`, id)
 	if err != nil {
-
 		// postgres errors
-		if err, ok := err.(*pq.Error); ok {
-			switch err.Code {
-
-			// invalid text representation
-			case "22P02":
+		var pqErr *pq.Error
+		if errors.As(err, pqErr) {
+			if pqErr.Code == "22P02" {
 				return "", ErrInvalidID
 			}
 		}

@@ -24,7 +24,7 @@ const (
 	alphabet  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz"
 	charSet   = alphabet + digits
 
-	hashedPasswd = "$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m"
+	hashedPasswd = "$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m" //nolint:gosec
 	username     = "urlshorteneradmin"
 )
 
@@ -38,15 +38,13 @@ var (
 
 // AuthenticateAdmin validates if the given passwd is correct.
 func (s *service) AuthenticateAdmin(name string, passwd string) error {
-
-	// check username
 	if name != username {
 		return ErrUnauthorized
 	}
 
 	// validate
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPasswd), []byte(passwd+salt))
-	if err == bcrypt.ErrMismatchedHashAndPassword {
+	if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
 		return ErrUnauthorized
 	} else if err != nil {
 		return fmt.Errorf("unexpected validation failure: %w", err)
@@ -59,7 +57,6 @@ func (s *service) AuthenticateAdmin(name string, passwd string) error {
 // ValidateAdminKey validates given admin key. ErrUnauthorized is returned
 // if key is wrong. Otherwise, unexpected internal server error is returned.
 func (s *service) ValidateAdminKey(ctx context.Context, wholeKey string) error {
-
 	wholeKey += salt
 
 	// separate the wholeKey
@@ -84,14 +81,14 @@ WHERE
 
 	// scan row
 	var hashKey string
-	if err := row.Scan(&hashKey); err == sql.ErrNoRows {
+	if err := row.Scan(&hashKey); errors.Is(err, sql.ErrNoRows) {
 		return ErrUnauthorized
 	} else if err != nil {
 		return fmt.Errorf("retrived sql row scan error: %w", err)
 	}
 
 	// compare
-	if err := bcrypt.CompareHashAndPassword([]byte(hashKey), []byte(key)); err == bcrypt.ErrMismatchedHashAndPassword {
+	if err := bcrypt.CompareHashAndPassword([]byte(hashKey), []byte(key)); errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
 		return ErrUnauthorized
 	} else if err != nil {
 		return fmt.Errorf("")
@@ -102,11 +99,9 @@ WHERE
 
 // GenerateAdminKey generates a new admin_key and add it into the database.
 func (s *service) GenerateAdminKey(ctx context.Context) (string, error) {
-
 	var prefix, key []byte
 
 	for {
-
 		// generate key
 		prefix, key = genKey()
 
@@ -124,11 +119,11 @@ VALUES
   ($1, $2);
 	`, prefix, hashKey)
 		if err != nil {
-
 			// postgres errors
-			if err, ok := err.(*pq.Error); ok {
+			var pqErr *pq.Error
+			if errors.As(err, pqErr) {
 				// unique violation
-				if err.Code == "23505" {
+				if pqErr.Code == "23505" {
 					continue
 				}
 			}
@@ -144,7 +139,6 @@ VALUES
 
 // RevokeAdminKey revokes admin_key with the given unique prefix.
 func (s *service) RevokeAdminKey(ctx context.Context, prefix string) error {
-
 	// revoke
 	res, err := s.DB.ExecContext(ctx, `
 UPDATE
@@ -169,7 +163,6 @@ WHERE
 
 // genKey generates a random prefix and key of an api key.
 func genKey() ([]byte, []byte) {
-
 	// set seed
 	rand.Seed(time.Now().UnixNano())
 

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/chutified/url-shortener/data"
@@ -9,7 +10,6 @@ import (
 
 // AddRecord adds a new record.
 func (h *handler) AddRecord(c *gin.Context) {
-
 	// bind record
 	var newRecord data.Record
 	err := c.ShouldBindJSON(&newRecord)
@@ -23,14 +23,13 @@ func (h *handler) AddRecord(c *gin.Context) {
 	// add record
 	r, err := h.ds.AddRecord(c, &newRecord)
 	if err != nil {
-		switch err {
-
-		case data.ErrInvalidRecord:
+		switch {
+		case errors.Is(err, data.ErrInvalidRecord):
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 
-		case data.ErrUnavailableShort:
+		case errors.Is(err, data.ErrUnavailableShort):
 			c.JSON(http.StatusConflict, gin.H{
 				"error": err.Error(),
 			})
@@ -49,9 +48,7 @@ func (h *handler) AddRecord(c *gin.Context) {
 }
 
 // UpdateRecord replace the record with given the certain ID.
-func (h *handler) UpdateRecord(c *gin.Context) {
-
-	// get record's ID
+func (h *handler) UpdateRecord(c *gin.Context) { // get record's ID
 	id := c.Param("record_id")
 
 	// bind record
@@ -67,19 +64,18 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 	// update record
 	r, err := h.ds.UpdateRecord(c, id, &newRecord)
 	if err != nil {
-		switch err {
-
-		case data.ErrUnavailableShort:
+		switch {
+		case errors.Is(err, data.ErrUnavailableShort):
 			c.JSON(http.StatusConflict, gin.H{
 				"error": err.Error(),
 			})
 
-		case data.ErrIDNotFound:
+		case errors.Is(err, data.ErrIDNotFound):
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
 
-		case data.ErrInvalidID:
+		case errors.Is(err, data.ErrInvalidID):
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
@@ -99,22 +95,19 @@ func (h *handler) UpdateRecord(c *gin.Context) {
 }
 
 // DeleteRecord removes the record with the certain ID.
-func (h *handler) DeleteRecord(c *gin.Context) {
-
-	// get record's ID
+func (h *handler) DeleteRecord(c *gin.Context) { // get record's ID
 	id := c.Param("record_id")
 
 	// delete record
 	did, err := h.ds.DeleteRecord(c, id)
 	if err != nil {
-		switch err {
-
-		case data.ErrIDNotFound:
+		switch {
+		case errors.Is(err, data.ErrIDNotFound):
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
 
-		case data.ErrInvalidID:
+		case errors.Is(err, data.ErrInvalidID):
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
@@ -135,22 +128,19 @@ func (h *handler) DeleteRecord(c *gin.Context) {
 }
 
 // GetRecordByID serves a record with the certain ID.
-func (h *handler) GetRecordByID(c *gin.Context) {
-
-	// get record's ID
+func (h *handler) GetRecordByID(c *gin.Context) { // get record's ID
 	id := c.Param("record_id")
 
 	// get record
 	r, err := h.ds.GetRecordByID(c, id)
 	if err != nil {
-		switch err {
-
-		case data.ErrIDNotFound:
+		switch {
+		case errors.Is(err, data.ErrIDNotFound):
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
 
-		case data.ErrInvalidID:
+		case errors.Is(err, data.ErrInvalidID):
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
@@ -169,17 +159,14 @@ func (h *handler) GetRecordByID(c *gin.Context) {
 }
 
 // GetRecordByShort serves a record with the certain Short value.
-func (h *handler) GetRecordByShort(c *gin.Context) {
-
-	// get record's Short
+func (h *handler) GetRecordByShort(c *gin.Context) { // get record's Short
 	short := c.Param("record_short")
 
 	// get record
 	r, err := h.ds.GetRecordByShort(c, short)
 	if err != nil {
-		switch err {
-
-		case data.ErrShortNotFound:
+		switch {
+		case errors.Is(err, data.ErrShortNotFound):
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
@@ -198,17 +185,14 @@ func (h *handler) GetRecordByShort(c *gin.Context) {
 }
 
 // GetRecordByShortPeek serves a full url of the shortcut.
-func (h *handler) GetRecordByShortPeek(c *gin.Context) {
-
-	// get short
+func (h *handler) GetRecordByShortPeek(c *gin.Context) { // get short
 	short := c.Param("record_short")
 
 	// get full url
 	full, err := h.ds.GetRecordByShortPeek(c, short)
 	if err != nil {
-		switch err {
-
-		case data.ErrShortNotFound:
+		switch {
+		case errors.Is(err, data.ErrShortNotFound):
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
@@ -229,9 +213,7 @@ func (h *handler) GetRecordByShortPeek(c *gin.Context) {
 }
 
 // GetRecordsLen returns a total number of records.
-func (h *handler) GetRecordsLen(c *gin.Context) {
-
-	// get length
+func (h *handler) GetRecordsLen(c *gin.Context) { // get length
 	l, err := h.ds.GetRecordsLen(c)
 	if err != nil {
 		h.ds.LogError(c, err)
@@ -264,22 +246,19 @@ func (h *handler) GetAllRecords(c *gin.Context) {
 }
 
 // RecordRecovery tries to recover a softly deleted record.
-func (h *handler) RecordRecovery(c *gin.Context) {
-
-	// load id
+func (h *handler) RecordRecovery(c *gin.Context) { // load id
 	id := c.Param("record_id")
 
 	// recover a record
 	rid, err := h.ds.RecordRecovery(c, id)
 	if err != nil {
-		switch err {
-
-		case data.ErrNotDeleted:
+		switch {
+		case errors.Is(err, data.ErrNotDeleted):
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
 
-		case data.ErrInvalidID:
+		case errors.Is(err, data.ErrInvalidID):
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})

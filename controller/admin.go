@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/chutified/url-shortener/data"
@@ -9,7 +10,6 @@ import (
 
 // GenerateAdminKey handles a new admin_key generation.
 func (h *handler) GenerateAdminKey(c *gin.Context) {
-
 	// generate a new key
 	key, err := h.ds.GenerateAdminKey(c)
 	if err != nil {
@@ -28,7 +28,6 @@ func (h *handler) GenerateAdminKey(c *gin.Context) {
 
 // RevokeAdminKey handles admin_key's cancellation.
 func (h *handler) RevokeAdminKey(c *gin.Context) {
-
 	// load prefix
 	prefix := c.Query("prefix")
 	if prefix == "" {
@@ -40,8 +39,7 @@ func (h *handler) RevokeAdminKey(c *gin.Context) {
 
 	// revoke
 	if err := h.ds.RevokeAdminKey(c, prefix); err != nil {
-		if err == data.ErrPrefixNotFound {
-
+		if errors.Is(err, data.ErrPrefixNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})

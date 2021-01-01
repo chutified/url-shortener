@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-
 	// get configuration
 	cfg, err := config.GetConfig("settings.json")
 	if err != nil {
