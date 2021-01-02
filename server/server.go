@@ -58,7 +58,7 @@ func (s *server) Run() error {
 	return nil
 }
 
-// Stop stop the server.
+// Stop stops the server.
 func (s *server) Stop() error {
 	// stop server
 	ctx, cancel := context.WithTimeout(context.Background(), s.srvTimeOut)
