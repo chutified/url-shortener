@@ -19,6 +19,9 @@ var (
 	ErrDriverNotSupported = errors.New("only postgres sql driver is supported")
 	// ErrInvalidTimeFormat is returned if given time can not be correctly formatted.
 	ErrInvalidTimeFormat = errors.New("invalid server timeout duration")
+	// ErrDBCONNEnvVarNotSet is returned if environment variable of the database connection is not set.
+	ErrDBCONNEnvVarNotSet = errors.New(
+		"environment variable of url (URL_SHORTENER_DBCONN) for database connection is not set")
 )
 
 // Config represents the server's settings and the configuration of the database.
@@ -41,7 +44,7 @@ func GetConfig(file string) (*Config, error) {
 	// check for database connection environment variable
 	dbConn := os.Getenv("URL_SHORTENER_DBCONN")
 	if dbConn == "" {
-		return nil, errors.New("environment variable of url (URL_SHORTENER_DBCONN) for database connection is not set")
+		return nil, ErrDBCONNEnvVarNotSet
 	}
 
 	cfg.DB.DBConn = dbConn
