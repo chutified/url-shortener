@@ -23,7 +23,7 @@ const (
 	alphabet  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz"
 	charSet   = alphabet + digits
 
-	hashedPasswd = "$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m"
+	hashedPasswd = "$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m" //nolint:gosec
 	username     = "urlshorteneradmin"
 )
 
