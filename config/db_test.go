@@ -1,7 +1,9 @@
-package config
+package config_test
 
 import (
 	"testing"
+
+	"github.com/chutified/url-shortener/config"
 )
 
 type fields struct {
@@ -43,7 +45,7 @@ var dbConnStrTests = []struct {
 func TestDB_ConnStr(t *testing.T) {
 	for _, tt := range dbConnStrTests {
 		t.Run(tt.name, func(t *testing.T) {
-			db := &DB{
+			db := &config.DB{
 				DBConn: tt.fields.DBConn,
 			}
 			got, got1 := db.ConnStr()
