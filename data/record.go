@@ -12,8 +12,11 @@ import (
 	"github.com/lib/pq"
 )
 
-// ErrPostgresInvalidTextRepresentation occurs when type is represented in a bad format.
-const ErrPostgresInvalidTextRepresentation = "22P02"
+// ErrPQInvalidTextRepresentation occurs when type is represented in a bad format.
+const ErrPQInvalidTextRepresentation = "22P02"
+
+// ErrPQUniqueKeyViolation occurs when Postgres' unique key is violated.
+const ErrPQUniqueKeyViolation = "23505"
 
 // Record is the unit of each shorten URL.  Record stores the time of its creation,
 // update and deletion. All Short attributes must be unique. Full can have duplicates.
@@ -79,7 +82,7 @@ VALUES
 		var pqErr *pq.Error
 		if errors.As(err, pqErr) {
 			// unique violation
-			if pqErr.Code == "23505" {
+			if pqErr.Code == ErrPQUniqueKeyViolation {
 				return nil, ErrUnavailableShort
 			}
 		}
@@ -120,11 +123,11 @@ WHERE
 		if errors.As(err, pqErr) {
 			switch pqErr.Code {
 			// unique violation
-			case "23505":
+			case ErrPQUniqueKeyViolation:
 				return nil, ErrUnavailableShort
 
 			// invalid text representation
-			case ErrPostgresInvalidTextRepresentation:
+			case ErrPQInvalidTextRepresentation:
 				return nil, ErrInvalidID
 			}
 		}
@@ -162,7 +165,7 @@ WHERE
 		// if err, ok := err.(*pq.Error); ok {
 		var pqErr *pq.Error
 		if errors.As(err, pqErr) {
-			if pqErr.Code == ErrPostgresInvalidTextRepresentation {
+			if pqErr.Code == ErrPQInvalidTextRepresentation {
 				return "", ErrInvalidID
 			}
 		}
@@ -214,7 +217,7 @@ LIMIT 1;
 		// postgres errors
 		var pqErr *pq.Error
 		if errors.As(err, pqErr) {
-			if pqErr.Code == ErrPostgresInvalidTextRepresentation {
+			if pqErr.Code == ErrPQInvalidTextRepresentation {
 				return nil, ErrInvalidID
 			}
 		}
@@ -389,7 +392,7 @@ WHERE
 		// postgres errors
 		var pqErr *pq.Error
 		if errors.As(err, pqErr) {
-			if pqErr.Code == ErrPostgresInvalidTextRepresentation {
+			if pqErr.Code == ErrPQInvalidTextRepresentation {
 				return "", ErrInvalidID
 			}
 		}
