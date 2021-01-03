@@ -12,6 +12,9 @@ import (
 	"github.com/lib/pq"
 )
 
+// ErrPostgresInvalidTextRepresentation occurs when type is represented in a bad format.
+const ErrPostgresInvalidTextRepresentation = "22P02"
+
 // Record is the unit of each shorten URL.  Record stores the time of its creation,
 // update and deletion. All Short attributes must be unique. Full can have duplicates.
 type Record struct {
@@ -121,7 +124,7 @@ WHERE
 				return nil, ErrUnavailableShort
 
 			// invalid text representation
-			case "22P02":
+			case ErrPostgresInvalidTextRepresentation:
 				return nil, ErrInvalidID
 			}
 		}
@@ -159,7 +162,7 @@ WHERE
 		// if err, ok := err.(*pq.Error); ok {
 		var pqErr *pq.Error
 		if errors.As(err, pqErr) {
-			if pqErr.Code == "22P02" {
+			if pqErr.Code == ErrPostgresInvalidTextRepresentation {
 				return "", ErrInvalidID
 			}
 		}
@@ -203,6 +206,7 @@ LIMIT 1;
 	// scan row into new record
 	var r Record
 	err := row.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt)
+
 	if errors.Is(err, sql.ErrNoRows) {
 		// nothing returned
 		return nil, ErrIDNotFound
@@ -210,7 +214,7 @@ LIMIT 1;
 		// postgres errors
 		var pqErr *pq.Error
 		if errors.As(err, pqErr) {
-			if pqErr.Code == "22P02" {
+			if pqErr.Code == ErrPostgresInvalidTextRepresentation {
 				return nil, ErrInvalidID
 			}
 		}
@@ -246,6 +250,7 @@ LIMIT 1;
 	// scan row into a new record
 	var r Record
 	err := row.Scan(&r.ID, &r.Full, &r.Short, &r.Usage, &r.CreatedAt, &r.UpdatedAt)
+
 	if errors.Is(err, sql.ErrNoRows) {
 		// nothing returned
 		return nil, ErrShortNotFound
@@ -277,6 +282,7 @@ LIMIT 1;
 	// scan full url
 	var id, full string
 	err := row.Scan(&id, &full)
+
 	if errors.Is(err, sql.ErrNoRows) {
 		return "", ErrShortNotFound
 	} else if err != nil {
@@ -311,6 +317,7 @@ WHERE
 	// scan row
 	var count int
 	err := row.Scan(&count)
+
 	if err != nil {
 		return 0, fmt.Errorf("unexpected sql query error: %w", err)
 	}
@@ -334,6 +341,10 @@ WHERE
 ORDER BY
   usage;
 	`)
+	if err != nil {
+		return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
+	}
+
 	defer func() {
 		if err := rows.Close(); err != nil {
 			s.LogError(ctx, err)
@@ -342,21 +353,18 @@ ORDER BY
 
 	// scan each record
 	var records []*ShortRecord
+
 	for rows.Next() {
 		// create new record
 		var r ShortRecord
 		err := rows.Scan(&r.ID, &r.Full, &r.Short, &r.Usage)
+
 		if err != nil {
 			return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
 		}
 
 		// store
 		records = append(records, &r)
-	}
-
-	// err check
-	if err != nil {
-		return nil, fmt.Errorf("unexpected server error: %w", err)
 	}
 
 	return records, nil
@@ -381,7 +389,7 @@ WHERE
 		// postgres errors
 		var pqErr *pq.Error
 		if errors.As(err, pqErr) {
-			if pqErr.Code == "22P02" {
+			if pqErr.Code == ErrPostgresInvalidTextRepresentation {
 				return "", ErrInvalidID
 			}
 		}

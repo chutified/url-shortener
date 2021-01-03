@@ -11,6 +11,12 @@ import (
 	"github.com/chutified/url-shortener/controller"
 )
 
+const (
+	ReadTimeOut     = 500
+	ReadHearTimeout = 300
+	WriteTimeout    = 500
+)
+
 // Server manages the whole web service runtime.
 type Server interface {
 	Set(context.Context, *config.Config) error
@@ -63,6 +69,7 @@ func (s *server) Stop() error {
 	// stop server
 	ctx, cancel := context.WithTimeout(context.Background(), s.srvTimeOut)
 	defer cancel()
+
 	if err := s.srv.Shutdown(ctx); err != nil {
 		return fmt.Errorf("a forced shutdown failed: %w", err)
 	}
@@ -85,9 +92,11 @@ func (s *server) setHandler(ctx context.Context, cfg *config.Config) error {
 	// initialize handler
 	s.h = controller.NewHandler()
 	err := s.h.InitDataService(ctx, cfg.DB)
+
 	if err != nil {
 		return fmt.Errorf("can not init handler's data service: %w", err)
 	}
+
 	return nil
 }
 
@@ -100,8 +109,8 @@ func (s *server) setServer(cfg *config.Config) {
 	s.srv = &http.Server{
 		Addr:              cfg.Addr(),
 		Handler:           r,
-		ReadTimeout:       500 * time.Millisecond,
-		ReadHeaderTimeout: 300 * time.Millisecond,
-		WriteTimeout:      500 * time.Millisecond,
+		ReadTimeout:       ReadTimeOut * time.Millisecond,
+		ReadHeaderTimeout: ReadHearTimeout * time.Millisecond,
+		WriteTimeout:      WriteTimeout * time.Millisecond,
 	}
 }

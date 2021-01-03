@@ -19,6 +19,7 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 				"error": "missing username form field",
 			})
 			c.Abort()
+
 			return
 		}
 
@@ -28,6 +29,7 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 				"error": "missing password form field",
 			})
 			c.Abort()
+
 			return
 		}
 
@@ -37,6 +39,7 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 				"error": fmt.Errorf("authentication error: %w", err),
 			})
 			c.Abort()
+
 			return
 		} else if err != nil {
 			s.LogError(c, err)
@@ -44,6 +47,7 @@ func AdminLogin(s data.Service) gin.HandlerFunc {
 				"error": data.ErrUnexpectedError,
 			})
 			c.Abort()
+
 			return
 		}
 
@@ -61,6 +65,7 @@ func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 				"error": "missing admin_key query parameter",
 			})
 			c.Abort()
+
 			return
 		}
 
@@ -71,6 +76,7 @@ func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 				"error": "invalid admin_key query parameter",
 			})
 			c.Abort()
+
 			return
 		} else if err != nil {
 			s.LogError(c, err)
@@ -78,6 +84,7 @@ func ValidateAdminKey(s data.Service) gin.HandlerFunc {
 				"error": data.ErrUnexpectedError,
 			})
 			c.Abort()
+
 			return
 		}
 

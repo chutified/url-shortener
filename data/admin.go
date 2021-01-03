@@ -13,18 +13,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//goland:noinspection SpellCheckingInspection
+//goland:noinspection ALL
 const (
 	salt = "@salt"
 
-	// generating admin_key options
 	prefixLen = 8
 	keyLen    = 40
 	digits    = "0123456789"
 	alphabet  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz"
 	charSet   = alphabet + digits
 
-	hashedPasswd = "$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m" //nolint:gosec
+	hashedPasswd = "$2a$10$SBWWLZ4QvaTeUNk1moBW9O29Vuf4/KiXPweTcakYm4X1onaS/ZA1m"
 	username     = "urlshorteneradmin"
 )
 
@@ -84,14 +83,17 @@ WHERE
 	if err := row.Scan(&hashKey); errors.Is(err, sql.ErrNoRows) {
 		return ErrUnauthorized
 	} else if err != nil {
-		return fmt.Errorf("retrived sql row scan error: %w", err)
+		return fmt.Errorf("retrieved sql row scan error: %w", err)
 	}
 
 	// compare
-	if err := bcrypt.CompareHashAndPassword([]byte(hashKey), []byte(key)); errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+	if err := bcrypt.CompareHashAndPassword(
+		[]byte(hashKey),
+		[]byte(key),
+	); errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
 		return ErrUnauthorized
 	} else if err != nil {
-		return fmt.Errorf("")
+		return fmt.Errorf("unexpected validation failure: %w", err)
 	}
 
 	return nil
@@ -174,6 +176,7 @@ func genKey() ([]byte, []byte) {
 	for i := 0; i < prefixLen; i++ {
 		prefix[i] = alphabet[rand.Intn(len(alphabet))]
 	}
+
 	for i := 0; i < keyLen; i++ {
 		key[i] = charSet[rand.Intn(len(charSet))]
 	}

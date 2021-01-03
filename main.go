@@ -24,6 +24,7 @@ func main() {
 	// create server
 	srv := server.NewServer()
 	err = srv.Set(initCtx, cfg)
+
 	if err != nil {
 		log.Fatal(fmt.Errorf("failed to set server: %w", err))
 	}

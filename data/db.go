@@ -52,6 +52,7 @@ func (s *service) InitDB(ctx context.Context, dbCfg *config.DB) error {
 	// open connection to db
 	var err error
 	s.DB, err = sqlx.ConnectContext(ctx, driver, connStr)
+
 	if err != nil {
 		return fmt.Errorf("failed to open db conn: %w", err)
 	}

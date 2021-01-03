@@ -43,6 +43,7 @@ func GetConfig(file string) (*Config, error) {
 	if dbConn == "" {
 		return nil, errors.New("environment variable of url (URL_SHORTENER_DBCONN) for database connection is not set")
 	}
+
 	cfg.DB.DBConn = dbConn
 
 	return &cfg, nil
@@ -53,6 +54,7 @@ func (cfg *Config) Addr() string {
 	if cfg != nil {
 		return fmt.Sprintf(":%d", cfg.SrvPort)
 	}
+
 	return ""
 }
 
@@ -66,6 +68,7 @@ func OpenConfig(file string) (Config, error) { // open config file
 
 	// validate file extension
 	l := len(file)
+
 	if file[l-5:l] != ".json" {
 		return Config{}, ErrInvalidFileFormat
 	}
@@ -73,6 +76,7 @@ func OpenConfig(file string) (Config, error) { // open config file
 	// decode json
 	var cfg Config
 	err = json.NewDecoder(f).Decode(&cfg)
+
 	if err != nil {
 		return Config{}, ErrInvalidJSONFile
 	}

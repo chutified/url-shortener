@@ -13,10 +13,12 @@ func (h *handler) AddRecord(c *gin.Context) {
 	// bind record
 	var newRecord data.Record
 	err := c.ShouldBindJSON(&newRecord)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
+
 		return
 	}
 
@@ -40,6 +42,7 @@ func (h *handler) AddRecord(c *gin.Context) {
 				"error": data.ErrUnexpectedError,
 			})
 		}
+
 		return
 	}
 
@@ -54,10 +57,12 @@ func (h *handler) UpdateRecord(c *gin.Context) { // get record's ID
 	// bind record
 	var newRecord data.ShortRecord
 	err := c.ShouldBindJSON(&newRecord)
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
+
 		return
 	}
 
@@ -87,6 +92,7 @@ func (h *handler) UpdateRecord(c *gin.Context) { // get record's ID
 				"error": data.ErrUnexpectedError,
 			})
 		}
+
 		return
 	}
 
@@ -118,6 +124,7 @@ func (h *handler) DeleteRecord(c *gin.Context) { // get record's ID
 				"error": data.ErrUnexpectedError,
 			})
 		}
+
 		return
 	}
 
@@ -151,6 +158,7 @@ func (h *handler) GetRecordByID(c *gin.Context) { // get record's ID
 				"error": data.ErrUnexpectedError,
 			})
 		}
+
 		return
 	}
 
@@ -177,6 +185,7 @@ func (h *handler) GetRecordByShort(c *gin.Context) { // get record's Short
 				"error": data.ErrUnexpectedError,
 			})
 		}
+
 		return
 	}
 
@@ -203,6 +212,7 @@ func (h *handler) GetRecordByShortPeek(c *gin.Context) { // get short
 				"error": data.ErrUnexpectedError,
 			})
 		}
+
 		return
 	}
 
@@ -220,6 +230,7 @@ func (h *handler) GetRecordsLen(c *gin.Context) { // get length
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
 		})
+
 		return
 	}
 
@@ -238,6 +249,7 @@ func (h *handler) GetAllRecords(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
 		})
+
 		return
 	}
 
@@ -269,6 +281,7 @@ func (h *handler) RecordRecovery(c *gin.Context) { // load id
 				"error": err.Error(),
 			})
 		}
+
 		return
 	}
 

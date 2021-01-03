@@ -17,6 +17,7 @@ func (h *handler) GenerateAdminKey(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
 		})
+
 		return
 	}
 
@@ -34,6 +35,7 @@ func (h *handler) RevokeAdminKey(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "missing prefix query parameter",
 		})
+
 		return
 	}
 
@@ -43,6 +45,7 @@ func (h *handler) RevokeAdminKey(c *gin.Context) {
 			c.JSON(http.StatusNotFound, gin.H{
 				"error": err.Error(),
 			})
+
 			return
 		}
 
@@ -50,6 +53,7 @@ func (h *handler) RevokeAdminKey(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": data.ErrUnexpectedError,
 		})
+
 		return
 	}
 
