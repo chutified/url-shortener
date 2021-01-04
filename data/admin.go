@@ -5,10 +5,9 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"math/rand"
 	"strings"
-	"time"
 
+	"github.com/chutified/rand"
 	"github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -165,27 +164,25 @@ WHERE
 
 // genKey generates a random prefix and key of an api key.
 func genKey() ([]byte, []byte) {
-	// set seed
-	rand.Seed(time.Now().UnixNano())
-
 	// init buffers
 	prefix := make([]byte, prefixLen)
 	key := make([]byte, keyLen)
 
+	r := rand.New()
 	// fill
 	for i := 0; i < prefixLen; i++ {
-		prefix[i] = alphabet[rand.Intn(len(alphabet))]
+		prefix[i] = alphabet[r.Intn(len(alphabet))]
 	}
 
 	for i := 0; i < keyLen; i++ {
-		key[i] = charSet[rand.Intn(len(charSet))]
+		key[i] = charSet[r.Intn(len(charSet))]
 	}
 
 	// shuffle
-	rand.Shuffle(prefixLen, func(i, j int) {
+	r.Shuffle(prefixLen, func(i, j int) {
 		prefix[i], prefix[j] = prefix[j], prefix[i]
 	})
-	rand.Shuffle(keyLen, func(i, j int) {
+	r.Shuffle(keyLen, func(i, j int) {
 		key[i], key[j] = key[j], key[i]
 	})
 
