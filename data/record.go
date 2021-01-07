@@ -319,8 +319,8 @@ WHERE
 
 	// scan row
 	var count int
+	
 	err := row.Scan(&count)
-
 	if err != nil {
 		return 0, fmt.Errorf("unexpected sql query error: %w", err)
 	}
@@ -360,8 +360,8 @@ ORDER BY
 	for rows.Next() {
 		// create new record
 		var r ShortRecord
+		
 		err := rows.Scan(&r.ID, &r.Full, &r.Short, &r.Usage)
-
 		if err != nil {
 			return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
 		}

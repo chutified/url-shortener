@@ -91,8 +91,8 @@ func (s *server) Close() error { // close handler
 func (s *server) setHandler(ctx context.Context, cfg *config.Config) error {
 	// initialize handler
 	s.h = controller.NewHandler()
+	
 	err := s.h.InitDataService(ctx, cfg.DB)
-
 	if err != nil {
 		return fmt.Errorf("can not init handler's data service: %w", err)
 	}

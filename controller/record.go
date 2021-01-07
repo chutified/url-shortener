@@ -12,8 +12,8 @@ import (
 func (h *handler) AddRecord(c *gin.Context) {
 	// bind record
 	var newRecord data.Record
+	
 	err := c.ShouldBindJSON(&newRecord)
-
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -56,8 +56,8 @@ func (h *handler) UpdateRecord(c *gin.Context) { // get record's ID
 
 	// bind record
 	var newRecord data.ShortRecord
+	
 	err := c.ShouldBindJSON(&newRecord)
-
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
