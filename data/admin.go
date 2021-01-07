@@ -26,11 +26,12 @@ const (
 	username     = "urlshorteneradmin"
 )
 
+var keySplitLen = 2
+
 var (
 	// ErrUnauthorized is returned if provided admin_key is invalid.
 	ErrUnauthorized = errors.New("admin key validation failure")
 	// ErrPrefixNotFound is returned if admin_key with the given prefix can not be found.
-
 	ErrPrefixNotFound = errors.New("admin_key's prefix was not found")
 )
 
@@ -59,7 +60,7 @@ func (s *service) ValidateAdminKey(ctx context.Context, wholeKey string) error {
 
 	// separate the wholeKey
 	splitKey := strings.Split(wholeKey, ".")
-	if len(splitKey) != 2 {
+	if len(splitKey) != keySplitLen {
 		return ErrUnauthorized
 	}
 
@@ -75,7 +76,7 @@ FROM
 WHERE
   prefix = $1
   AND revoked_at IS NULL;
-	`, prefix)
+  `, prefix)
 
 	// scan row
 	var hashKey string
@@ -118,7 +119,7 @@ INSERT INTO
   admin_keys (prefix, hashed_key)
 VALUES
   ($1, $2);
-	`, prefix, hashKey)
+  `, prefix, hashKey)
 		if err != nil {
 			// postgres errors
 			var pqErr *pq.Error
@@ -149,7 +150,7 @@ SET
 WHERE
   prefix = $1
   AND revoked_at IS NULL;
-	`, prefix)
+  `, prefix)
 	if err != nil {
 		return fmt.Errorf("unexpected validation failure: %w", err)
 	}

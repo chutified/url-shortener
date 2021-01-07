@@ -31,7 +31,7 @@ type Config struct {
 	DB         *DB    `json:"db"`
 }
 
-// GtConfig returns configuration based on the given file.
+// GetConfig returns configuration based on the given file.
 // The base of the file's path is at the root of the project (main.go file level).
 // Configuration file must be JSON file type (.json).
 func GetConfig(file string) (*Config, error) {
@@ -62,12 +62,15 @@ func (cfg *Config) Addr() string {
 }
 
 // OpenConfig load config file, validate its extension and decode it into a Config struct.
-func OpenConfig(file string) (Config, error) { // open config file
+func OpenConfig(file string) (cfg Config, err error) { // open config file
 	f, err := os.Open(file)
 	if err != nil {
 		return Config{}, ErrFileNotFound
 	}
-	defer f.Close()
+
+	defer func() {
+		err = f.Close()
+	}()
 
 	// validate file extension
 	l := len(file)
@@ -77,9 +80,7 @@ func OpenConfig(file string) (Config, error) { // open config file
 	}
 
 	// decode json
-	var cfg Config
 	err = json.NewDecoder(f).Decode(&cfg)
-
 	if err != nil {
 		return Config{}, ErrInvalidJSONFile
 	}

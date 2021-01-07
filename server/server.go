@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	ReadTimeOut     = 500
-	ReadHearTimeout = 300
-	WriteTimeout    = 500
+	readTimeOut     = 500
+	readHearTimeout = 300
+	writeTimeout    = 500
 )
 
 // Server manages the whole web service runtime.
@@ -91,7 +91,7 @@ func (s *server) Close() error { // close handler
 func (s *server) setHandler(ctx context.Context, cfg *config.Config) error {
 	// initialize handler
 	s.h = controller.NewHandler()
-	
+
 	err := s.h.InitDataService(ctx, cfg.DB)
 	if err != nil {
 		return fmt.Errorf("can not init handler's data service: %w", err)
@@ -109,8 +109,8 @@ func (s *server) setServer(cfg *config.Config) {
 	s.srv = &http.Server{
 		Addr:              cfg.Addr(),
 		Handler:           r,
-		ReadTimeout:       ReadTimeOut * time.Millisecond,
-		ReadHeaderTimeout: ReadHearTimeout * time.Millisecond,
-		WriteTimeout:      WriteTimeout * time.Millisecond,
+		ReadTimeout:       readTimeOut * time.Millisecond,
+		ReadHeaderTimeout: readHearTimeout * time.Millisecond,
+		WriteTimeout:      writeTimeout * time.Millisecond,
 	}
 }

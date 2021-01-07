@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetHTTPHandler returns http.Handler with set routing.
 func (h *handler) GetHTTPHandler() http.Handler { // set router
 	r := gin.New()
 	r.Use(gin.Logger())

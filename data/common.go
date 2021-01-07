@@ -26,7 +26,7 @@ INSERT INTO
   error_logs (err_msg)
 VALUES
   ($1);
-	`, logErr)
+  `, logErr)
 	if err != nil {
 		fmt.Printf("[ERROR] unalbe to log error (%v): %v", logErr, err)
 	}

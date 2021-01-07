@@ -116,7 +116,7 @@ SET
 WHERE
   shortcut_id = $1
   AND deleted_at IS NULL;
-	`, updRecord.ID, newNullString(updRecord.Full), newNullString(updRecord.Short))
+  `, updRecord.ID, newNullString(updRecord.Full), newNullString(updRecord.Short))
 	if err != nil {
 		// postgres errors
 		var pqErr *pq.Error
@@ -159,7 +159,7 @@ SET
 WHERE
   shortcut_id = $1
   AND deleted_at IS NULL;
-	`, id)
+  `, id)
 	if err != nil {
 		// postgres errors
 		// if err, ok := err.(*pq.Error); ok {
@@ -204,7 +204,7 @@ WHERE
   shortcut_id = $1
   AND deleted_at IS NULL
 LIMIT 1;
-	`, id)
+  `, id)
 
 	// scan row into new record
 	var r Record
@@ -248,7 +248,7 @@ WHERE
   short_url = $1
   AND deleted_at IS NULL
 LIMIT 1;
-	`, short)
+  `, short)
 
 	// scan row into a new record
 	var r Record
@@ -264,7 +264,7 @@ LIMIT 1;
 	return &r, nil
 }
 
-// GetRecordByShort finds and returns the full version which corresponds
+// GetRecordByShortPeek finds and returns the full version which corresponds
 // to the given short url.
 func (s *service) GetRecordByShortPeek(ctx context.Context, short string) (string, error) { // short to lowercase
 	short = strings.ToLower(short)
@@ -280,7 +280,7 @@ WHERE
   short_url = $1
   AND deleted_at IS NULL
 LIMIT 1;
-	`, short)
+  `, short)
 
 	// scan full url
 	var id, full string
@@ -310,16 +310,16 @@ func (s *service) GetRecordsLen(ctx context.Context) (int, error) {
 	// query database
 	row := s.DB.QueryRowContext(ctx, `
 SELECT
-  COUNT(*)
+  COUNT(*) as C
 FROM
   shortcuts
 WHERE
   deleted_at IS NULL;
-	`)
+  `)
 
 	// scan row
 	var count int
-	
+
 	err := row.Scan(&count)
 	if err != nil {
 		return 0, fmt.Errorf("unexpected sql query error: %w", err)
@@ -329,9 +329,9 @@ WHERE
 }
 
 // GetAllRecords returns all active records in the database.
-func (s *service) GetAllRecords(ctx context.Context) ([]*ShortRecord, error) {
+func (s *service) GetAllRecords(ctx context.Context) (records []*ShortRecord, err error) {
 	// retrieve all records
-	rows, err := s.DB.QueryContext(ctx, `
+	rows, _ := s.DB.QueryContext(ctx, `
 SELECT
   shortcut_id,
   full_url,
@@ -343,31 +343,29 @@ WHERE
   deleted_at is NULL
 ORDER BY
   usage;
-	`)
-	if err != nil {
-		return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
-	}
+  `)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
+	// }
 
 	defer func() {
-		if err := rows.Close(); err != nil {
-			s.LogError(ctx, err)
-		}
+		err = rows.Close()
 	}()
-
-	// scan each record
-	var records []*ShortRecord
 
 	for rows.Next() {
 		// create new record
 		var r ShortRecord
-		
-		err := rows.Scan(&r.ID, &r.Full, &r.Short, &r.Usage)
-		if err != nil {
+
+		if err := rows.Scan(&r.ID, &r.Full, &r.Short, &r.Usage); err != nil {
 			return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
 		}
 
 		// store
 		records = append(records, &r)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("unexpected server error while scanning racords: %w", err)
 	}
 
 	return records, nil
@@ -387,7 +385,7 @@ SET
 WHERE
   shortcut_id = $1
   AND deleted_at IS NOT NULL;
-	`, id)
+  `, id)
 	if err != nil {
 		// postgres errors
 		var pqErr *pq.Error

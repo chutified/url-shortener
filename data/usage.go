@@ -15,7 +15,7 @@ SET
 WHERE
   shortcut_id = $1
   AND deleted_at IS NULL;
-	`, id)
+  `, id)
 	if err != nil {
 		return fmt.Errorf("update failure: %w", err)
 	}
@@ -35,7 +35,7 @@ INSERT INTO
   usages (shortcut_id)
 VALUES
   ($1);
-	`, id)
+  `, id)
 	if err != nil {
 		return fmt.Errorf("insert failure: %w", err)
 	}
