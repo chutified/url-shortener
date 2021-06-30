@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/chutified/url-shortener/config"
+	"github.com/chutommy/url-shortener/config"
 	"github.com/stretchr/testify/assert"
 )
 

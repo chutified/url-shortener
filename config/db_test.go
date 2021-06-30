@@ -3,7 +3,7 @@ package config_test
 import (
 	"testing"
 
-	"github.com/chutified/url-shortener/config"
+	"github.com/chutommy/url-shortener/config"
 )
 
 type fields struct {

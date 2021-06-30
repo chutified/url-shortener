@@ -2,8 +2,8 @@ cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMT
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
-github.com/chutified/rand v0.0.0-20210104105047-c062bd934c5a h1:5r6Oy19+fhiY9s0IrN41wTVBKTwx9ASOxp3BhIY6T3Y=
-github.com/chutified/rand v0.0.0-20210104105047-c062bd934c5a/go.mod h1:awH1ifpLyc4fdJQh3oQoWLBsHu3+lS3zr9gCgqZsnbc=
+github.com/chutommy/rand v0.0.0-20210104105047-c062bd934c5a h1:5r6Oy19+fhiY9s0IrN41wTVBKTwx9ASOxp3BhIY6T3Y=
+github.com/chutommy/rand v0.0.0-20210104105047-c062bd934c5a/go.mod h1:awH1ifpLyc4fdJQh3oQoWLBsHu3+lS3zr9gCgqZsnbc=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

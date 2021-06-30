@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/chutified/url-shortener/data"
+	"github.com/chutommy/url-shortener/data"
 	"github.com/gin-gonic/gin"
 )
 

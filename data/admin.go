@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/chutified/rand"
+	"github.com/chutommy/rand"
 	"github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )

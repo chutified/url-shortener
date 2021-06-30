@@ -3,7 +3,7 @@ package controller
 import (
 	"net/http"
 
-	"github.com/chutified/url-shortener/middleware"
+	"github.com/chutommy/url-shortener/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )

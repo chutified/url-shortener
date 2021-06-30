@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/chutified/url-shortener/config"
-	"github.com/chutified/url-shortener/server"
+	"github.com/chutommy/url-shortener/config"
+	"github.com/chutommy/url-shortener/server"
 	_ "github.com/lib/pq"
 )
 

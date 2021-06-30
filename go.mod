@@ -1,9 +1,9 @@
-module github.com/chutified/url-shortener
+module github.com/chutommy/url-shortener
 
 go 1.15
 
 require (
-	github.com/chutified/rand v0.0.0-20210104105047-c062bd934c5a
+	github.com/chutommy/rand v0.0.0-20210104105047-c062bd934c5a
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-sql-driver/mysql v1.5.0 // indirect

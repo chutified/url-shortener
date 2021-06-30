@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/chutified/url-shortener/config"
-	"github.com/chutified/url-shortener/data"
+	"github.com/chutommy/url-shortener/config"
+	"github.com/chutommy/url-shortener/data"
 )
 
 // Handler is a handler interface of the controller.

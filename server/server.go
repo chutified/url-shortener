@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/chutified/url-shortener/config"
-	"github.com/chutified/url-shortener/controller"
+	"github.com/chutommy/url-shortener/config"
+	"github.com/chutommy/url-shortener/controller"
 )
 
 const (
